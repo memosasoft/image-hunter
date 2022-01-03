@@ -12,7 +12,6 @@ Still not happy with the spider and will continue the project in the futur.
 
 Works with Rapid API to search for initial URL can be easy adapted to use other initial links solution.
 
-Memosa Services
 PROJECT @ PARADOXE
 https://paradoxe-sim.weebly.com/
 
