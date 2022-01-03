@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-from bs4 import BeautifulSoup
+import datetime  # needed to create unique image file name
+import mimetypes  # needed for download functionality
+import shutil  # to save it locally
+import time  # needed to create unique image file name
 
 ## Importing Necessary Modules
-import requests # to get image from the web
-import shutil # to save it locally
-import datetime # needed to create unique image file name
-import time # needed to create unique image file name
-import mimetypes # needed for download functionality
+import requests  # to get image from the web
+from bs4 import BeautifulSoup
 
 urls_buffer = [] # program main url buffer
 images_tags = [] # program main found url/link buffer
@@ -195,7 +195,9 @@ def clean_url_file():
         file.write("")
         
 def delete_images_in_folders(switch):
-    import os, re, os.path
+    import os
+    import os.path
+    import re
     
     mypath = "./images/large_images"
     for root, dirs, files in os.walk(mypath):
@@ -220,7 +222,9 @@ def delete_images_in_folders(switch):
                 os.remove(os.path.join(root, file))
 
 def delete_html_in_folders():
-    import os, re, os.path
+    import os
+    import os.path
+    import re
     
     mypath = "./images/data"
     for root, dirs, files in os.walk(mypath):
