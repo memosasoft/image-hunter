@@ -1,30 +1,27 @@
 
 **Image-Miner**
 
-Is an smart image spider. 
+Image-Miner is a personal learing project. It an smart industrial grade image spider-scraper. 
+Its fast and rubost. It is intelligente too.
 
-- It as a search interface to start de scrapping process
-- It has as scoring system to make a decision about what images to download
-- It makes its ways and works without supervision
-- It verifies textual html for keyword
-- It check link for keywords
+Visit the web site to view some of the images Image-miner found.
+
+**Visite our Website**
+https://image-miner.weebly.com/
+
+**Miner features and functionality**
+- It as a search interface with Google, Yahoo and Bing 
+- It has as smart scoring system to make a decision 
+- It makes it's ways and works without supervision
+- It verifies textual html for keyword and it check link for keywords
 
 More intelligence is on the way...
 
-Works very well and you can ask for the type of image you want the scrapper to collect. 
-Also follows a specific urls path depending on keyword selection. 
-
-**Final verdict**
+**I may be to difficult**
 Still not happy with the spider and will continue the project in the futur.
-
-Works with Rapid API to search for initial URL can be easy adapted to use other initial links solution.
-
-**Website**
-https://image-miner.weebly.com/
 
 **MY WHISHLIST for 2022**
 
-- Database Integration
 - Web interface and web service
 - Vision developpement 
 - Search selection 
@@ -36,6 +33,8 @@ https://image-miner.weebly.com/
 **NEXT PHASE**
 
 Image-Miner will have the hability to juge of the quality of an image.
+
+Database Integration is completed with sqlite.
 
 PROJECT @ PARADOXE
 https://paradoxe-sim.weebly.com/
