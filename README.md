@@ -9,9 +9,6 @@ Is an smart image spider.
 - It verifies textual html for keyword
 - It check link for keywords
 
-**Website**
-https://image-miner.weebly.com/
-
 More intelligence is on the way...
 
 Works very well and you can ask for the type of image you want the scrapper to collect. 
@@ -22,14 +19,21 @@ Still not happy with the spider and will continue the project in the futur.
 
 Works with Rapid API to search for initial URL can be easy adapted to use other initial links solution.
 
-**NEXT PHASE**
+**Website**
+https://image-miner.weebly.com/
 
 **MY WHISHLIST for 2022**
 
-- Integration of a Database
-- Web interface and integration for the web service
-- Vision developpement for image search selection and auto-classification needs
-- Enhance AI to have better searching and roaming habilities
+- Database Integration
+- Web interface and web service
+- Vision developpement 
+- Search selection 
+- Auto-classification 
+- Enhance AI
+- Better searching 
+- Better roaming habilities
+
+**NEXT PHASE**
 
 Image-Miner will have the hability to juge of the quality of an image.
 
