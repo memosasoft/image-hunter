@@ -6,8 +6,8 @@ Is an smart image spider.
 - It as a search interface to start de scrapping process
 - It has as scoring system to make a decision about what images to download
 - It makes its ways and works without supervision
-- It check link for keywords one of many Google technics
 - It verifies textual html for keyword
+- It check link for keywords
 
 **Website**
 https://image-miner.weebly.com/
