@@ -44,6 +44,7 @@ tits
 twitter
 unsplash
 webcam
+wiki
 xxx
 yahoo
 youtube
