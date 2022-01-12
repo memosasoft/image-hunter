@@ -9,6 +9,8 @@ import time  # needed to create unique image file name
 from sqlite3 import Error
 
 # Importing Necessary Modules
+import urllib.request
+from urllib.request import URLError, HTTPError
 import requests  # to get image from the web
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -34,16 +36,19 @@ urls_image_buffer = []
 list_proxies = []
 list_of_working_proxies = []
 
+# idea/prototype
+smart_user_profile = []
+
 # search urls from google
 search_urls = []
 scraper_dictionary = []
 
 # Learning array for text the system reads
 learned_keywords = []
-# ua = UserAgent()
+ua = UserAgent()
 
 # keywords container for query and page content
-query_keywords = []
+query_history = []
 
 # stop words and urls for blocking urls
 stop_words = []
@@ -54,8 +59,6 @@ configuration = configparser.ConfigParser()
 configuration.read('config.env')
 
 RELAX_TIME = float(configuration.get('CONFIG', 'RELAX_TIME'))
-
-
 QUALITY_SCORE = float(configuration.get('CONFIG', 'QUALITY_SCORE'))
 KEYWORDS_IN_LINK = int(configuration.get('CONFIG', 'KEYWORDS_IN_LINK'))
 
@@ -68,24 +71,21 @@ QUERY_BOOST  = str(configuration.get('CONFIG', 'QUERY_BOOST'))
 
 ANALYSIS_MAX_WORDS = int(configuration.get('CONFIG', 'ANALYSIS_MAX_WORDS'))
 MIN_IMAGE_SIZE = int(configuration.get('CONFIG', 'MIN_IMAGE_SIZE'))
-
 DOWNLOAD_OPTION = int(configuration.get('CONFIG', 'DOWNLOAD_OPTION'))
 DOWNLOAD_HTML = int(configuration.get('CONFIG', 'DOWNLOAD_HTML'))
 
 DEBUG_CONSOLE = str(configuration.get('CONFIG', 'DEBUG_CONSOLE'))
 DEBUG_LOG = str(configuration.get('CONFIG', 'DEBUG_LOG'))
-
 DB_TEXT_SIZE = int(configuration.get('CONFIG', 'DB_TEXT_SIZE'))
 
 SAVE_COUNTER = int(configuration.get('CONFIG', 'SAVE_COUNTER'))
-
 DIG_FOR_URLS = "ON"
 
-TIME_LOCK = 1
+TIME_LOCK = 2
 DIRECTORS_PICKS = 300000
 
-media_files = "psd,webm,ogg,wav,zip,rar,7z,bin,mp4,mp3,mov,mpeg,tiff,ico,jpg,gif,png,bmp"
-query_boost = "photo,image,picture,gallery,resolution,5k,HD,wallpaper,hd,4k,art,high,definition,illustration,collection"
+media_files = ",psd,webm,ogg,wav,zip,rar,7z,bin,mp4,mp3,mov,mpeg,tiff,ico,jpg,gif,png,bmp"
+query_boost = ",photo,image,picture,gallery,resolution,5k,HD,wallpaper,hd,4k,art,high,definition,illustration,collection"
 
 def init_program():
     # Query global_memory self-learning object  
@@ -95,9 +95,10 @@ def init_program():
     x_print(str(len(urls_buffer)) + " in the main buffer")
     x_print(str(len(urls_visited)) + " in the visited websites")
 
-    # User system-ineraction
+    # User system-interaction
     x_print("WELCOME TO Image-Miner")
     x_print("Powered by Python")
+
     #x_print("In memory of META-CRAWLER 1990")
     x_print("Image-Miner is connected to Google, Yahoo and Bing")
     x_print("Thank you for using Image-Miner")
@@ -105,14 +106,14 @@ def init_program():
     # clean urls lists
     user_input = input("\nClean start? (y/n)")
     
-    # User system-ineraction
+    # User system-interaction
     x_print("Saving images and media to archives folder")
 
     # transfert images and media to archives folder
     save_to_archive("./media/", "./archives/media/")
     x_print("Images and media saved\n")
     
-    # User system-ineraction
+    # User system-interaction
     x_print("SETUP PROCESS")
     x_print("Starting setup process and cleanup")
     setup_process(user_input)
@@ -122,14 +123,14 @@ def init_program():
     x_print("Connecting to search engines")
     x_print("Google, Yahoo and Bing")
     
-    # add the user query to the user querie list
-    # add also to the query_keywords list    x_print("\nNEW SELF-LEARNING FEATURE - AI")
+    # add the user query to the user queries list
+    # add also to the query_history list    x_print("\nNEW SELF-LEARNING FEATURE - AI")
     x_print("\nLoading user query global_memory for system self-learning purposes")    
-    query_keywords = load_query_history()
-    query_keywords.insert(0,query)
-    query_keywords = save_query_history()
+    query_history = load_query_history()
+    query_history.insert(0,query)
+    query_history = save_query_history()
 
-    # QUERY BOOST - special functionnality to get
+    # QUERY BOOST - special functionality to get
     # better image related searches from main 
     # search engine : Google, Yahoo and Bing
     query = clean_query(query)
@@ -153,7 +154,7 @@ def extract_info_from_url(url):
 
     info = clean_text(info)
     x_print("Concepts from the url: ")    
-    x_print("Url: " + str(info))
+    x_print("Url: " + str(trim(info)))
     return info
 
 def clean_query(query):
@@ -182,22 +183,26 @@ def clean_query(query):
 def search_mining_prototype(query):
     x_print("My new Simple Image-Miner uses")
     x_print("Experimental QUERY_BOOST")
-    original_q = query
-    prototype_rq = query
+    
+    # Normalize the query string
+    original_q = query.lower()
+    prototype_rq = query.lower()
+    query = query.lower()
 
-    # Prepare query with exta image termes
-    query = query + "," + query_boost
+    # Prepare query with extra image termes
+    query = query + " " + query_boost
     query = clean_query(query)
      
-    x_print("\nQUERY_BOOST ACVTIVATED: ")
+    x_print("\nQUERY_BOOST ACTIVATED: ")
     x_print("\nSending queries")
     
     # PROTOTYPE EXTRA Random QUERY 1 and 2
-    prototype_rq1 = prototype_rq + "unique, archive, images, art, rare, royalty free, artist"
-    prototype_rq2 = prototype_rq + "amazing, galleries, photo, suprizing, download, digital"
+    prototype_rq1 = prototype_rq + " unique archive images art rare royalty free artist"
+    prototype_rq2 = prototype_rq + " amazing galleries photo surprizing download digital"
+    prototype_rq3 = prototype_rq + " digital rare strange weird amazing free digital"
 
     # Add extra image related search terms to enhance
-    # the search results the liste is in config.env
+    # the search results the list is in config.env
     search_urls = get_search_urls(query.strip())
     #x_print("Original SEARCH 1: " + str(len(search_urls)))
     
@@ -207,9 +212,12 @@ def search_mining_prototype(query):
     list_rq2 = get_search_urls(prototype_rq2.strip())
     #x_print("GET SEARCH 2: " + str(len(list_rq2)))   
 
-    list_rq3 = get_search_urls(original_q.strip())
+    list_rq3 = get_search_urls(prototype_rq3.strip())
     #x_print("GET SEARCH 3: " + str(len(list_rq3)))   
- 
+
+    list_rq4 = get_search_urls(original_q.strip())
+    #x_print("GET SEARCH 3: " + str(len(list_rq3)))   
+
     #x_print("Initial search result")
     #print("FIRST LIST: " + str(len(search_urls)))
     search_urls = add_list_to_list(search_urls, list_rq1)
@@ -222,7 +230,8 @@ def search_mining_prototype(query):
     #print("THIRD LIST: " + str(len(search_urls)))
     search_urls = add_list_to_list(search_urls, list_rq3)
     #x_print("AFTER ADDIND THE THIRD Result Set: " + str(len(search_urls)))   
-    
+    search_urls = add_list_to_list(search_urls, list_rq4)
+
     #print("FOURTH LIST: " + str(len(search_urls)))
     # System interaction with user
     x_print("We got: " + str(len(search_urls)) + " urls to mine\n")
@@ -243,7 +252,6 @@ def add_list_to_list(list_to_grow, list_to_add):
 def insert_search_results_in_buffer(search_urls):
     # Main url buffer
     global urls_buffer
-    global urls_image_buffer
     
     for i in search_urls:
 
@@ -262,17 +270,17 @@ def insert_search_results_in_buffer(search_urls):
 # Self learning object to gain ai from
 # user interaction - Prototype
 def load_query_history():
-    global query_keywords
+    global query_history
     x_print("LOADING query pattern history")
     with open("./intelligence/query_history", "r") as file:
         # reading each line"
         for line in file:
             line = clean_text(line)
-            query_keywords.append(line)
-    return query_keywords
+            query_history.append(line)
+    return query_history
 
 def save_global_memory_urls():
-    global query_keywords
+    global query_history
     global urls_buffer
     global urls_visited
     global scraper_dictionary
@@ -287,7 +295,7 @@ def save_global_memory_urls():
     urls_image_buffer = save_urls(urls_image_buffer,"urls_image_buffer")
 
 def load_global_memory_url():
-    global query_keywords
+    global query_history
     global urls_buffer
     global urls_visited
     global scraper_dictionary
@@ -300,17 +308,17 @@ def load_global_memory_url():
    
 def save_query_history():
     # write url in visited site file
-    global query_keywords
+    global query_history
     temp_global_memory = []
 
     with open("./intelligence/query_history", "w", encoding="utf-8") as file:
-        for query in query_keywords:
+        for query in query_history:
             if not query is None:
                 if not query in temp_global_memory:
                     file.write(query + "\n")
                     temp_global_memory.append(query)
         file.close()
-    return query_keywords
+    return query_history
 
 def insert_data(url, keywords, filename, original_name):
     try:
@@ -332,9 +340,9 @@ def insert_data(url, keywords, filename, original_name):
         x_print(e)
 
 def check_keywords_in_urls(url):
-    global query_keywords
+    global query_history
 
-    for key in query_keywords[0].split(" "):
+    for key in query_history[0].split(" "):
         key = str(key).lower()
         url = str(url).lower()
         if len(key)>2:
@@ -360,10 +368,10 @@ def check_media(url):
     # this function should clean de url
     for media_ext in media_files.split(","):
         if url.find(str("."+media_ext.strip())) >= 0:
-             download_media(url)
+            download(url)
+            break
 
-def download_media(url):
-    
+def download(url):
     global global_memory
     global img_count
     
@@ -377,18 +385,18 @@ def download_media(url):
             import wget
             
             wget.download(url, save_path + file)
-            relax(RELAX_TIME)         
+            relax(TIME_LOCK) 
 
-            x_print("Extrated image URL : " + url)
-            global_memory.append(url)
+            x_print("URL : " + url)
+            urls_image_buffer.append(url)
 
-            relax(TIME_LOCK)         
             x_print("Download completed")
         except:
             x_print("Error downloading")
-            pass #x_print("Error downloading")
-            img_count = img_count -1
-
+            x_print("URL causing error is: " + url)
+            if(1 < img_count):
+                img_count = img_count -1
+            
     if(url.find(".mp4") <= 1 and url.find("mp3") <= 1):
         archive_filename = "./intelligence/ARCHIVE_MEDIA.M3U"
 
@@ -438,8 +446,7 @@ def format_title(title, ext):
     full_title = ""
     for i in title:
         if (i.isupper()):
-            full_title = full_title + " " + i.capitalize()
-            
+            full_title = full_title + " " + i.capitalize()   
         else:
             full_title = full_title + i
 
@@ -471,19 +478,16 @@ def add_to_dic(i):
         scraper_dictionary.append(i)
 
 def get_search_urls(query):
-
     search_urls = []
-
     import search as search_interface
     search_urls = search_interface.search_google(query)
     search_urls = search_interface.search_yahoo(query)
     search_urls = search_interface.search_bing(query)
     #print("Results found: " + str(len(search_urls)))
-   
     return search_urls
 
 # starting list will be save to urls.txt
-# each spidered url will verify html content and extract new urls to the file
+# each spiders url will verify html content and extract new urls to the file
 # the urls.txt are the full for the spider
 def setup_process(user_input):
     x_print("STARTING SETUP PROCESS")
@@ -502,7 +506,7 @@ def setup_process(user_input):
 
         # Stats
         x_print(str(len(urls_buffer)) + "In the main buffer")
-        x_print(str(len(urls_visited)) + "In the visted websites")
+        x_print(str(len(urls_visited)) + "In the visited websites")
         
 def clean_url_global_memory_files():
     with open("urls", "w", encoding="utf-8") as file:
@@ -515,14 +519,18 @@ def delete_media_in_folders(switch):
     import os
     import os.path
 
-    mypath = "./media/"
-    for root, dirs, files in os.walk(mypath):
+    my_path = "./media/"
+    for root, dirs, files in os.walk(my_path):
         for file in files:
             os.remove(os.path.join(root, file))
 
 def delete_html_in_folders():
     import os
     import os.path
+    my_path = "./data/"
+    for root, dirs, files in os.walk(my_path):
+        for file in files:
+            os.remove(os.path.join(root, file))
 
 def learn_from_scraping(url, html):
     # Extract Title
@@ -549,10 +557,10 @@ def learn_keywords(url, html, title):
     title = clean_text(str(title))
     url_keywords = extract_info_from_url(url) 
     final_string = clean_text(title + " " + url_keywords)
-    learned_keywords.append(final_string)
-    load_title_into_dictionnary()
+    learned_keywords.append(trim(final_string))
+    load_title_into_dictionary(final_string)
 
-def load_title_into_dictionnary(title):
+def load_title_into_dictionary(title):
     for i in title.split(" "):
         i = clean_word(i)
         i = clean_word_from_stop_list(i)
@@ -564,7 +572,7 @@ def prepare_data_and_insert_in_database(url, html, title):
         text = clean_text(text)
     
     text = clean_text(str(text))
-    # Make sure there is enought text for the daabase
+    # Make sure there is enoughs text for the database
     end = 0
     if len(text)<DB_TEXT_SIZE:
         end = len(text)
@@ -596,7 +604,7 @@ def evaluate_url(url, html):
     # verify keywords in url
     # verify page content
     # Then make a decision if we should spider it
-    # and extract information from childrens
+    # and extract information from children's
     return True
 
 def get_urls(filename, urls_list):
@@ -634,7 +642,7 @@ def dump_email_data(file_name, data):
         file.close()
 
 def check_email(url):
-    # EMAIL Extraction instelligence to be developped
+    # EMAIL Extraction intelligence to be developped
     if (url.find("mailto:") >= 0):
         dump_email_data("./intelligence/email", url)
         url = urls_buffer[0]
@@ -661,9 +669,6 @@ def debug_info(info):
         f.write("\n" + str(time) + " : ")
         f.write(str(info))
         f.close()
-
-def get_image(url):
-    download_media(url)
 
 def save_to_archive(src, trg):
     # importing required packages
@@ -740,13 +745,13 @@ def clean_word(word):
     return word
 
 def verify_link(link):
-    global query_keywords
+    global query_history
     global text_quality_score
 
     x_print("LINK VERIFICATION")
     text_quality_score = 0
 
-    for pattern in query_keywords[0].split(" "):
+    for pattern in query_history[0].split(" "):
         link = link.lower()
         pattern = pattern.lower()
         
@@ -787,8 +792,8 @@ def verify_link(link):
 
 def dig_for_urls(url):
     # DIG to find more URLs
-    # page = requests.get(str(url), headers={'User-Agent': ua.random}, timeout=105)  
-    page = requests.get(str(url), timeout=15)  
+    page = requests.get(str(url), headers={'User-Agent': ua.random}, timeout=105)  
+    # page = requests.get(str(url), timeout=15)  
     urls_visited.append(url)
 
     if page.status_code == 200:          
@@ -804,7 +809,7 @@ def dig_for_urls(url):
             urls_buffer.append(str(new_url))
 
 def verify_url_with_query(url):
-    for word in query_keywords[0]:
+    for word in query_history[0]:
         if url.find(word)>=0:
             return True;
     return False
@@ -817,27 +822,26 @@ def verify_page_content(url, title, text):
     if (url == None):
         return False
         
-    counter = 0
-
     x_print("STARTING PAGE CONTENT VERIFICATION")
     x_print("TITLE: " + str(title))
     x_print("Checking url: ")
     x_print("url: " + str(url))
 
-    global query_keywords
+    global query_history
     global text_quality_score
     # Clean numbers from text
-    text = clean_numbers(text)
+    # text = clean_numbers(text)
 
     pattern = ""
     text_keywords = []
     text_keywords_sl = []
-   
+    words_in_text = 0
+    
     # First quick test the title test
     title = title.lower()
     
     for pattern in title.split(" "):
-        if pattern in query_keywords[0]:
+        if pattern in query_history[0]:
             text_quality_score = text_quality_score + 1
     
     x_print("Title pre-test quality score (QS) " + str(text_quality_score)) 
@@ -881,12 +885,12 @@ def verify_page_content(url, title, text):
         pattern = pattern.strip()
         pattern = pattern.lower()
 
-        if pattern in query_keywords[0]:
+        if pattern in query_history[0]:
             text_quality_score = text_quality_score + 1
 
         # Check for stems
         if len(pattern) > MIN_STEM_SIZE:
-            if pattern[0:MIN_STEM_SIZE] in query_keywords[0]:
+            if pattern[0:MIN_STEM_SIZE] in query_history[0]:
                 text_quality_score = text_quality_score + 1
 
     x_print("TITLE: " + str(title))
@@ -901,7 +905,7 @@ def verify_page_content(url, title, text):
         pattern = pattern.strip()
         pattern = pattern.lower()
 
-        if pattern in query_keywords[0]:
+        if pattern in query_history[0]:
             text_quality_score = text_quality_score + 5
     
     x_print("TEXT TOTALLY CLEANED")
@@ -950,7 +954,7 @@ def clean_numbers(text):
 # it returns a list of urls or images tags
 def extract_urls(url, html):
     # Query global_memory self-learning object  
-    global query_keywords
+    global query_history
     global urls_buffer
     global urls_visited
     global scraper_dictionary
@@ -1011,6 +1015,7 @@ def get_root(url):
     return root
 
 def clean_text(url_text):
+    url_text = url_text.lower()
     url_text = url_text.replace("\xa0", "")
     url_text = url_text.replace("\'", "'")
     url_text = url_text.replace("\\'", "'")
@@ -1111,17 +1116,14 @@ def extract_images(url, html_file):
             numLink = numLink + 1
             link = link.get("src")
     
-            relax(RELAX_TIME)         
-
             if (link == None):
                 continue
             else:
                 link = fix_link(link,url)
-                if not link in image_link_memory: 
+                if not link in image_link_memory:
                     try:
-                        check_media(link)
                         check_email(link)
-                        get_image(link)
+                        download(link)
 
                         img_count = img_count + 1
                         urls_visited.append(link)
@@ -1223,11 +1225,8 @@ def check_stop_words_in_urls(url):
 def load_stop_urls():
     global stop_urls
     x_print("LOADING STOPLIST")
-
     file = open("./intelligence/stop_urls", "r") 
     stop_urls = file.readlines()
-
-smart_user_profile = []
 
 def load_profile():
     global stop_urls
@@ -1283,10 +1282,17 @@ def get_title(html):
     title = soup.title.get_text()
     return title
 
+def format_for_pattern_check(url, title, text):
+    url = url.lower()
+    title = title.lower()
+    text = text.lower()
+    return url, title, text
+
 def get_html_textual_content(html):            
-    soup_x = BeautifulSoup(html, 'html.parser')
-    html_text = soup_x.get_text()
-    return html_text
+    soup = BeautifulSoup(html, 'html.parser')
+    text_in_html = soup.get_text()
+    text_in_html = clean_text(text_in_html)
+    return text_in_html
 
 def shuffle_list(list):
     import random
@@ -1307,36 +1313,49 @@ def start_image_miner():
     x_print("Starting image mining process...\n")
     x_print("Loading the memory...\n")
     load_global_memory_url()
-    
+    page = ""
     for url in urls_buffer:
-        try:
-            x_print("STARTING URL EXTRACTION PROCESS")
+        
+        x_print("STARTING URL EXTRACTION PROCESS")
             
+        try:
+            page = requests.get(str(url), headers={'User-Agent': ua.random})  
+    
+            # TEST
+            # page, status, contentType = requests_hack(url
+        except:
+            print("Error in resquest unhandeled")
+            relax(10)
+            continue
+        
+        try:
             url_count = url_count + 1               
             x_print("URL count : " + str(url_count))
             x_print("Image count :" + str(img_count))
-            x_print("Current URL :" + str(url))
-            
-            page = requests.get(url)  
-            
-            shuffle_list(urls_buffer)
-            relax(RELAX_TIME)         
-             
+            x_print("Current URL :" + str(url)) 
+        except:
+            print("Error in stats")
+        try:        
             title = get_title(page.text)
             text = get_html_textual_content(page.text)
-
-            if (verify_page_content(url, title, text)):
-                urls_buffer = extract_urls(url, page.text)
+            url, title, text = format_for_pattern_check(url, title, text)
+            result = verify_page_content(url, title, text)
+        except:
+            print("Error in NLP section")
+            continue
+        
+        try:        
+        
+            if (result):
+                urls_buffer = extract_urls(url, text)
                 urls_image_buffer = extract_images(url, page.text)
-                
                 urls_buffer.remove(url)
                 urls_visited.append(url)
         except:
-            pass
+            print("ERROR in extraction process")
         
         try:  
             db_txt = ""
-            db_txt = clean_text(db_txt)
             keywords = prepare_keywords_for_database(title)
             keywords = clean_text(keywords)
             keywords = trim(keywords)
@@ -1346,27 +1365,41 @@ def start_image_miner():
             if len(text) < DB_TEXT_SIZE:
                 db_txt =  text[0:len(text)]   
             
+            db_txt = clean_text(db_txt)
             db_txt = title + " " + keywords + " " + db_txt
             insert_url_data(str(url),str(db_txt), str(title))
-            #learn_keywords(str(url),str(db_txt), str(title))
             
-            # Randomize
-            shuffle_list(urls_buffer)
-            relax(RELAX_TIME)
-
-            save_global_memory_urls()
-            relax(RELAX_TIME)
-         
+            shuffle_list(urls_buffer) 
+            
+            learn_keywords(str(url),str(db_txt), str(title))
             clean_up_url_buffers(urls_buffer)
             clean_up_url_buffers(urls_visited)
-            relax(RELAX_TIME)
-            
             shuffle_list(urls_buffer)
-            relax(RELAX_TIME)        
-
+            save_global_memory_urls()
         except:
             continue
 
+
+# Extrae los correos de una única URL
+def requests_hack(url):
+
+    print ("Searching emails... please wait")
+
+    count = 0
+    listUrl = []
+
+    req = urllib.request.Request(
+            url, 
+            data=None, 
+            headers={
+            'User-Agent': ua.random
+        })
+
+    conn = urllib.request.urlopen(req, timeout=10)
+    status = conn.getcode()
+    contentType = conn.info().get_content_type()
+
+    return conn, status, contentType
 def main():
     # Start image spider/miner program
     x_print("Start image-miner program")
