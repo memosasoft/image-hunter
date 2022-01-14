@@ -6,11 +6,11 @@ import mimetypes  # needed for download functionality
 import shutil  # to save it locally
 import sqlite3
 import time  # needed to create unique image file name
-from sqlite3 import Error
-
 # Importing Necessary Modules
 import urllib.request
-from urllib.request import URLError, HTTPError
+from sqlite3 import Error
+from urllib.request import HTTPError, URLError
+
 import requests  # to get image from the web
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -18,7 +18,6 @@ from googlesearch import search
 
 # Session url and img global_memory
 global_memory = []
-image_link_memory = []
 url_global_memory = []
 
 img_count = 0
@@ -31,13 +30,6 @@ text_quality_score = 0
 urls_buffer = []  # long-term buffer =
 urls_visited = []  # visited_links
 urls_image_buffer = []
-
-# future proxy developments
-list_proxies = []
-list_of_working_proxies = []
-
-# idea/prototype
-smart_user_profile = []
 
 # search urls from google
 search_urls = []
@@ -59,6 +51,8 @@ configuration = configparser.ConfigParser()
 configuration.read('config.env')
 
 RELAX_TIME = float(configuration.get('CONFIG', 'RELAX_TIME'))
+TIME_LOCK =  float(configuration.get('CONFIG', 'TIME_LOCK'))
+
 QUALITY_SCORE = float(configuration.get('CONFIG', 'QUALITY_SCORE'))
 KEYWORDS_IN_LINK = int(configuration.get('CONFIG', 'KEYWORDS_IN_LINK'))
 
@@ -71,25 +65,23 @@ QUERY_BOOST  = str(configuration.get('CONFIG', 'QUERY_BOOST'))
 
 ANALYSIS_MAX_WORDS = int(configuration.get('CONFIG', 'ANALYSIS_MAX_WORDS'))
 MIN_IMAGE_SIZE = int(configuration.get('CONFIG', 'MIN_IMAGE_SIZE'))
-DOWNLOAD_OPTION = int(configuration.get('CONFIG', 'DOWNLOAD_OPTION'))
 DOWNLOAD_HTML = int(configuration.get('CONFIG', 'DOWNLOAD_HTML'))
 
 DEBUG_CONSOLE = str(configuration.get('CONFIG', 'DEBUG_CONSOLE'))
 DEBUG_LOG = str(configuration.get('CONFIG', 'DEBUG_LOG'))
 DB_TEXT_SIZE = int(configuration.get('CONFIG', 'DB_TEXT_SIZE'))
 
-SAVE_COUNTER = int(configuration.get('CONFIG', 'SAVE_COUNTER'))
+SAVE_COUNT = int(configuration.get('CONFIG', 'SAVE_COUNT'))
 DIG_FOR_URLS = "ON"
 
-TIME_LOCK = 2
-DIRECTORS_PICKS = 300000
+DIRECTORS_PICKS = int(configuration.get('CONFIG', 'DIRECTORS_PICKS'))
 
-media_files = ",psd,webm,ogg,wav,zip,rar,7z,bin,mp4,mp3,mov,mpeg,tiff,ico,jpg,gif,png,bmp"
+media_files = ",pdf,psd,apng,avif,bmp,gif,ico,cur,tif,tiff,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp,webm,ogg,wav,zip,rar,7z,bin,mp4,mp3,mov,mpeg,tiff,ico,jpg,gif,png,bmp"
 query_boost = ",photo,image,picture,gallery,resolution,5k,HD,wallpaper,hd,4k,art,high,definition,illustration,collection"
 
 def init_program():
     # Query global_memory self-learning object  
-    load_global_memory_url()
+    load_memory()
 
     # Stats
     x_print(str(len(urls_buffer)) + " in the main buffer")
@@ -114,14 +106,13 @@ def init_program():
     x_print("Images and media saved\n")
     
     # User system-interaction
-    x_print("SETUP PROCESS")
-    x_print("Starting setup process and cleanup")
+    # x_print("SETUP PROCESS")
+    # x_print("Starting setup process and cleanup")
     setup_process(user_input)
     
     query = input("What type of images you want to spider?")
     x_print("\nSEARCH MODULE\n")
-    x_print("Connecting to search engines")
-    x_print("Google, Yahoo and Bing")
+    x_print("Connecting to Google, Yahoo and Bing")
     
     # add the user query to the user queries list
     # add also to the query_history list    x_print("\nNEW SELF-LEARNING FEATURE - AI")
@@ -136,15 +127,17 @@ def init_program():
     query = clean_query(query)
 
     if QUERY_BOOST == "ON":  
-        search_mining_prototype(query)
+        multiple_search_prototype(query)
     else:
         search_urls = get_search_urls(query.strip())
-        insert_search_results_in_buffer(search_urls)
+        insert_in_buffer(search_urls)
 
 def extract_info_from_url(url):
     info = ""
     url_clean = url.replace(".", " ")
-    url_clean = url_clean.replace(".", "_")
+    url_clean = url_clean.replace("_", " ")
+    url_clean = url_clean.replace(",", "_")
+    url_clean = clean_url_html_tags(url_clean)
     url_clean = clean_url(url_clean)
     for i in url_clean.split("/"):
         i = clean_word(i)
@@ -153,8 +146,8 @@ def extract_info_from_url(url):
         info = info + " " + i
 
     info = clean_text(info)
-    x_print("Concepts from the url: ")    
-    x_print("Url: " + str(trim(info)))
+    x_print("Concepts found in url ")    
+    x_print(str(trim(info)))
     return info
 
 def clean_query(query):
@@ -180,7 +173,7 @@ def clean_query(query):
 
     return query
 
-def search_mining_prototype(query):
+def multiple_search_prototype(query):
     x_print("My new Simple Image-Miner uses")
     x_print("Experimental QUERY_BOOST")
     
@@ -230,15 +223,15 @@ def search_mining_prototype(query):
     #print("THIRD LIST: " + str(len(search_urls)))
     search_urls = add_list_to_list(search_urls, list_rq3)
     #x_print("AFTER ADDIND THE THIRD Result Set: " + str(len(search_urls)))   
+    
     search_urls = add_list_to_list(search_urls, list_rq4)
-
     #print("FOURTH LIST: " + str(len(search_urls)))
     # System interaction with user
     x_print("We got: " + str(len(search_urls)) + " urls to mine\n")
     x_print("Thank you Google, Yahoo and Bing...")
     # Inserting urls at the beginning of the url list
     x_print("\nAdding the search urls to the begining of search buffer...")
-    insert_search_results_in_buffer(search_urls)
+    insert_in_buffer(search_urls)
     
 def add_list_to_list(list_to_grow, list_to_add):
     result_counter = 0
@@ -249,12 +242,11 @@ def add_list_to_list(list_to_grow, list_to_add):
             result_counter = result_counter + 1
     return list_to_grow
 
-def insert_search_results_in_buffer(search_urls):
+def insert_in_buffer(urls):
     # Main url buffer
     global urls_buffer
     
-    for i in search_urls:
-
+    for i in urls:
         if (len(i)<=MIN_LINK_SIZE):
             continue
         if (len(i)>=MAX_LINK_SIZE):
@@ -264,14 +256,15 @@ def insert_search_results_in_buffer(search_urls):
         
         if not i in urls_buffer:
             urls_buffer.insert(0,str(i))    
-
-    save_global_memory_urls()
+    
+    urls_buffer = save_urls(urls_buffer, "urls")
+    #save_memory()
 
 # Self learning object to gain ai from
 # user interaction - Prototype
 def load_query_history():
     global query_history
-    x_print("LOADING query pattern history")
+    x_print("LOADING query history")
     with open("./intelligence/query_history", "r") as file:
         # reading each line"
         for line in file:
@@ -279,7 +272,7 @@ def load_query_history():
             query_history.append(line)
     return query_history
 
-def save_global_memory_urls():
+def save_memory():
     global query_history
     global urls_buffer
     global urls_visited
@@ -287,22 +280,27 @@ def save_global_memory_urls():
     global learned_keywords
     global urls_image_buffer
       
-    x_print("Saving into global_memory")  
+    x_print("Saving memory")  
     urls_buffer = save_urls(urls_buffer, "urls")
     urls_visited = save_urls(urls_visited, "urls_visited")
     learned_keywords = save_urls(learned_keywords, "./intelligence/learned_keywords")
     scraper_dictionary = save_urls(scraper_dictionary, "./intelligence/scraper_dictionary")
     urls_image_buffer = save_urls(urls_image_buffer,"urls_image_buffer")
 
-def load_global_memory_url():
-    global query_history
+def load_memory():
+    
     global urls_buffer
+    global urls_image_buffer
     global urls_visited
+    global query_history
     global scraper_dictionary
     global learned_keywords
     
+    x_print("Loading memory")    
     urls_visited = get_urls("urls_visited", urls_visited)
-    urls_buffer = get_urls("urls_image_buffer", urls_image_buffer)
+    urls_buffer = get_urls("urls", urls_buffer)
+    urls_image_buffer = get_urls("urls_image_buffer", urls_image_buffer)
+    query_history = get_urls("./intelligence/query_history", query_history)
     learned_keywords = get_urls("./intelligence/learned_keywords", learned_keywords)
     scraper_dictionary = get_urls("./intelligence/scraper_dictionary", scraper_dictionary)
    
@@ -374,29 +372,47 @@ def check_media(url):
 def download(url):
     global global_memory
     global img_count
-    
+    global url_count
+
     save_path = './media/'
     ext = url.split(".")[-1]
     file =  url.split("/")[-1]
+    target = str(save_path) + str(file)
     
     if url not in global_memory:
-        try:                
-            # Download process
-            import wget
-            
-            wget.download(url, save_path + file)
-            relax(TIME_LOCK) 
+        try: 
+            result = url_verification(url)
 
-            x_print("URL : " + url)
-            urls_image_buffer.append(url)
+            if (result):
+                import wget      
+                wget.download(str(url), str(target))
+                x_print("\nURL: " + str(url))
+                x_print("Download completed")
+            else:
+                return None
 
-            x_print("Download completed")
         except:
             x_print("Error downloading")
-            x_print("URL causing error is: " + url)
+            x_print("URL causing error is: " + str(url) + "\n")
+            x_print("File download location: " + str(target) + "\n")
+
             if(1 < img_count):
                 img_count = img_count -1
+
+            return None
             
+    # What ever site must be 
+    # inserted in the images buffer 
+    urls_image_buffer.append(url)
+    relax(TIME_LOCK)       
+    
+    if (result):
+        archive_it(url, file) 
+        verify_image_size(target)
+    else:
+        print("download url failed url basic verification")
+
+def archive_it(url, file):
     if(url.find(".mp4") <= 1 and url.find("mp3") <= 1):
         archive_filename = "./intelligence/ARCHIVE_MEDIA.M3U"
 
@@ -406,15 +422,21 @@ def download(url):
     if(url.find(".mp4") > 0):
         archive_filename = "./intelligence/ARCHIVE_MP4.M3U"
     
-    EXTINF_text = ""
     title = file
-    
+    EXTINF_text = ""
+
     with open(archive_filename, "a") as file:        
         EXTINF_text = "#EXTINF:-1, " + title
         file.write(EXTINF_text + "\n")        
         file.write(url + "\n")       
         file.close()
-        global_memory.append(title)
+
+def verify_image_size(target):
+    try:
+        get_size_img_check(target)
+        relax(TIME_LOCK*4)         
+    except:
+        print("Error in get_size_img_check")
 
 def build_title_from_filename(url):
     ext = url.split(".")[-1]
@@ -422,15 +444,15 @@ def build_title_from_filename(url):
     title = format_title(str(file), str(ext))
     return title
 
-def get_size_img_check(file_name_and_location):
+def get_size_img_check(img_file):
     import os
-    file_size = os.path.getsize(file_name_and_location)
+    file_size = os.path.getsize(img_file)
 
     if (file_size>DIRECTORS_PICKS):
-        shutil.move(str(file_name_and_location), './directors_picks/')                                   
+        shutil.move(str(img_file), './archives/directors_picks/')                                   
 
     if (file_size<MIN_IMAGE_SIZE):
-        shutil.move(str(file_name_and_location), './junk/')                                   
+        shutil.move(str(img_file), './archives/junk/')                                   
     pass
 
 def format_title(title, ext):    
@@ -502,7 +524,7 @@ def setup_process(user_input):
         global urls_buffer
         
         # Load image-miner url global_memory
-        load_global_memory_url()
+        load_memory()
 
         # Stats
         x_print(str(len(urls_buffer)) + "In the main buffer")
@@ -544,7 +566,7 @@ def learn_from_scraping(url, html):
     learn_keywords(url, html, title)
     prepare_data_and_insert_in_database(url, html, title)
     
-def clean_urlx(url_keywords):
+def clean_url_html_tags(url_keywords):
     url_keywords = url_keywords.replace("https", "")
     url_keywords = url_keywords.replace("http", "")
     url_keywords = url_keywords.replace("html", "")
@@ -649,7 +671,7 @@ def check_email(url):
         x_print("Email found adding to email list...")
     else:
         if (url.find("@") >= 0):
-            dump_email_data("./intelligence/email_validation.txt", url)
+            dump_email_data("./intelligence/email_validation", url)
             
 def relax(sec):
     time.sleep(sec)
@@ -732,6 +754,9 @@ def clean_url(url):
 
 def clean_word_from_stop_list(word):
     # preformating word
+    for i in stop_words:
+        i = i.replace("/n","")
+
     if word in stop_words:
         return ""
     return word
@@ -739,7 +764,7 @@ def clean_word_from_stop_list(word):
 def clean_word(word):
     for char in word:
         # ^ is the references char
-        if char in "()(){},.-:;|*/+\"\\~^–":
+        if char in "[]&\':–©(){},.-:;|*/+\"\\~^–":
             word = word.replace(char, " ")
     word = trim(word)
     return word
@@ -755,7 +780,7 @@ def verify_link(link):
         link = link.lower()
         pattern = pattern.lower()
         
-        # FIRTS CONTACT WITH INTELLIGENCE 
+        # FIRST CONTACT WITH INTELLIGENCE 
         # Look for mathematical stem or root of word
         if (len(pattern)<MIN_STEM_SIZE):
             stem = pattern[0:len(pattern)]
@@ -787,35 +812,91 @@ def verify_link(link):
     x_print("NO MATCHING KEYWORDS FOUND IN LINK - FAILED")
     x_print("URL: " + link)
     x_print("WE SHOULD NO FOLLOW THIS ROAD")
-    x_print("LETS KEEP ON MINING URLS TO GET IAMGES WE ARE LOOKING FOR")
+    x_print("LETS KEEP ON MINING URLS TO GET IMAGES WE ARE LOOKING FOR")
     return False
-
-def dig_for_urls(url):
-    # DIG to find more URLs
-    page = requests.get(str(url), headers={'User-Agent': ua.random}, timeout=105)  
-    # page = requests.get(str(url), timeout=15)  
-    urls_visited.append(url)
-
-    if page.status_code == 200:          
-        x_print("We got in... ")
-        x_print("Extracting URL: " + str(url))
-        x_print("DOWNLOAD IS SUCCESSFUL...")
-        # Extracting the source code of the page.
-        html_file = page.text     
-        urls = extract_only_urls(url, html_file)
-
-        for new_url in urls:
-            print("adding URL: " + str(new_url))
-            urls_buffer.append(str(new_url))
 
 def verify_url_with_query(url):
     for word in query_history[0]:
         if url.find(word)>=0:
             return True;
     return False
+
+def is_pattern_in_query(pattern, q_bonus):
+    global text_quality_score
+    query = query_history[0]
+    if pattern in query:
+        text_quality_score = text_quality_score + q_bonus
+        print("In stategy QS:" + str(text_quality_score) + " Match: " + str(pattern))
+        
+    if query.find(pattern)>=0:
+        text_quality_score = text_quality_score + q_bonus
+        print("Find stategy QS:" + str(text_quality_score) + " Match: " + str(pattern))
+        return text_quality_score 
+
+    return text_quality_score    
+
+def title_score(title):
+    try:
+        global query_history   
+        quality_score = 0
+        pattern = ""
+
+        # First quick test the title test
+        query = query_history[0]
+        query = query.lower()
+        title = title.lower()
+        
+        print("Title: " + str(title))  
+        print("Query: " + str(query))
+
+        query = query.replace("s","")
+        title = title.replace("s","")
+    
+        query = query.replace("e","")
+        title = title.replace("e","")
+
+        query = query.replace("a","")
+        title = title.replace("a","")
+        
+        query = query.replace("w"," ")
+        title = title.replace("w"," ")
+        
+        query = query.replace("t"," ")
+        title = title.replace("t"," ")
+
+        for pattern in title.split(" "):
+            pattern = clean_word(pattern)
+            pattern = clean_word_from_stop_list(pattern)
+
+            if (pattern == None) or (pattern == "") or (pattern == " "):
+                continue
+
+            quality_score = is_pattern_in_query(pattern,4)
+
+            # check pattern with no number
+            pattern = clean_numbers(pattern)
+            quality_score = is_pattern_in_query(pattern,3)
+
+            stem_size = MIN_STEM_SIZE
+            
+            if len(pattern)>MIN_STEM_SIZE:
+                stem_size = MIN_STEM_SIZE
+            else:
+                stem_size = len(pattern)-1
+
+            # check root/stems of the word
+            quality_score = is_pattern_in_query(pattern[0:stem_size],2)
+    except:
+        print("Error in title_score")  
+
+    return quality_score
     
 def verify_page_content(url, title, text):
-    
+
+    # pro-active cleaning processs
+    text = clean_text(text)
+    title = clean_text(title)
+
     # Only analyse the start of the document
     # First 1000 words to even out everyone 
     # and not be affected by SPAMMERS 
@@ -824,86 +905,156 @@ def verify_page_content(url, title, text):
         
     x_print("STARTING PAGE CONTENT VERIFICATION")
     x_print("TITLE: " + str(title))
-    x_print("Checking url: ")
     x_print("url: " + str(url))
+
+    text_size = 0
+    if (len(text)>DB_TEXT_SIZE):
+        text_size = DB_TEXT_SIZE
+    else:
+        text_size = len(text) - 1 
+
+    x_print("TEXT PREVIEW: " + str(text[0:text_size]))
 
     global query_history
     global text_quality_score
-    # Clean numbers from text
-    # text = clean_numbers(text)
 
-    pattern = ""
-    text_keywords = []
-    text_keywords_sl = []
-    words_in_text = 0
-    
+    # Reset at 0 Quality score
+    text_quality_score = 0
+
     # First quick test the title test
     title = title.lower()
+    text_quality_score = title_score(title)
+
+    pattern = ""
+    words_in_text = 0
     
-    for pattern in title.split(" "):
-        if pattern in query_history[0]:
-            text_quality_score = text_quality_score + 1
-    
+    text_keywords = []
+    text_keywords_sl = []
+    text_keywords_hf = []
+    text_keywords_long = []
+
+    # Text pre-processing
+    text = trim(text)
+
     x_print("Title pre-test quality score (QS) " + str(text_quality_score)) 
     # Clean the keywords in the document
     for pattern in text.split(" "):
-        if (text_quality_score>QUALITY_SCORE):
-            return True
+        #if (text_quality_score>QUALITY_SCORE):
+            #print("The Quality Score is: " + str(text_quality_score))        
+            #return True
+        
         words_in_text = words_in_text + 1
             
         pattern = pattern.lower()
         pattern = pattern.strip()
         pattern = str(pattern)
+
+        LONG_KEYWORD_SIZE = 8
+        if len(pattern) >= LONG_KEYWORD_SIZE:
+            if (not pattern in text_keywords_long):
+                text_keywords_long.append(pattern)     
+
+        pattern = clean_word(pattern)
         pattern = clean_word_from_stop_list(pattern)
-        
-        # Populate the text_keywords with keeywords 
+
+        LONG_KEYWORD_SIZE = 8
+        if len(pattern) >= LONG_KEYWORD_SIZE:
+            if (not pattern in text_keywords_long):
+                text_keywords_long.append(pattern)    
+
+        print("Pattern: " + str(pattern))
+        # Populate the text_keywords with keywords 
         # and stem of keywords for matching query 
-        # profile keywords for stat analysys
+        # profile keywords for stat analysis
         # of web page
-        if (len(pattern) >= MIN_WORD_SIZE):
-            # Eliminate double
-            if not pattern in text_keywords:
-                # x_print(word)
-                text_keywords.append(pattern)
-                if len(pattern) > MIN_STEM_SIZE:
-                    text_keywords.append(pattern[0:MIN_STEM_SIZE])
-            else:
-                if not pattern in text_keywords_sl:
-                    text_keywords_sl.append(pattern)
+
+        # Extract long keywords
+
+        try:
+
+            if (len(pattern) >= MIN_WORD_SIZE):
+                # Eliminate double
+                if not pattern in text_keywords:
+                    # x_print(pattern)
+                    text_keywords.append(pattern)
+                    
+                    if len(pattern) > MIN_STEM_SIZE:
+                        signature = pattern[0:MIN_STEM_SIZE]
+                        
+                        if not signature in text_keywords:
+                            text_keywords.append(signature)
+
+                        if len(pattern) > MIN_STEM_SIZE*2:
+                            signature_x = pattern[MIN_STEM_SIZE:MIN_STEM_SIZE*2]
+
+                            if not signature_x in text_keywords:
+                                text_keywords.append(signature_x)
+
+                        if len(pattern) > MIN_STEM_SIZE+2:
+                            signature_y = pattern[len(pattern)-MIN_STEM_SIZE:len(pattern)]
+
+                            if not signature_y in text_keywords:
+                                text_keywords.append(signature_y)
+                        
+                else:
+                    if not pattern in text_keywords_sl:
+                        text_keywords_sl.append(pattern)
+                    else:
+                        if not pattern in text_keywords_hf:
+                            text_keywords_hf.append(pattern)
+                  
+        except Exception as e:
+            print (e)
+            input("Press enter to continue")
     
+    print("Title QS is: " + str(text_quality_score))        
     x_print("TOTAL NUMBER WORDS: " + str(words_in_text))
     x_print("Unique keywords: " + str(len(text_keywords)))
-    x_print("Highers freq keywords: " + str(len(text_keywords_sl)))  
+    print(text_keywords)
+    
+    x_print("Highers (2) freq keywords: " + str(len(text_keywords_sl)))  
+    print(text_keywords_sl)
 
-    # FINAL IN HOUSE ANALYSYS OF WEB PAGE CONTENT
+    x_print("Highers (3+) freq keywords: " + str(len(text_keywords_hf)))  
+    print(text_keywords_hf)
+
+    x_print("long keywords: " + str(len(text_keywords_long)))  
+    print(text_keywords_long)
+
+    # FINAL IN HOUSE ANALYSIS OF WEB PAGE CONTENT
     # TO EVALUATE IF WE SHOULD DOWNLOAD THE IMAGES  
     for pattern in text_keywords:
         
-        if (text_quality_score>QUALITY_SCORE):
-            return True
+        #if (text_quality_score>QUALITY_SCORE):
+            #print("QS(Quality Score) is : " + str(text_quality_score))
+            #return True
 
         pattern = pattern.strip()
         pattern = pattern.lower()
-
-        if pattern in query_history[0]:
-            text_quality_score = text_quality_score + 1
+        
+        if (pattern == None) or (pattern == "") or (pattern == " "):
+            continue
+        
+        text_quality_score = is_pattern_in_query(pattern,2)
 
         # Check for stems
         if len(pattern) > MIN_STEM_SIZE:
-            if pattern[0:MIN_STEM_SIZE] in query_history[0]:
-                text_quality_score = text_quality_score + 1
-
+            text_quality_score = is_pattern_in_query(pattern[0:MIN_STEM_SIZE],1)
+        
     x_print("TITLE: " + str(title))
     x_print("URL: " + str(url))
-    x_print("Initial Quality score (QS) " + str(text_quality_score))
+    x_print("Quality score (QS) " + str(text_quality_score))
     
     # EXTRA EVALUATION FOR HIGH FREQUENCY KEYWORDS
     for pattern in text_keywords_sl:
-        if (text_quality_score>QUALITY_SCORE):
-            break
+        #if (text_quality_score>QUALITY_SCORE):
+        #    break
 
         pattern = pattern.strip()
         pattern = pattern.lower()
+
+        if (pattern == None) or (pattern == "") or (pattern == " "):
+            continue
 
         if pattern in query_history[0]:
             text_quality_score = text_quality_score + 5
@@ -912,12 +1063,13 @@ def verify_page_content(url, title, text):
     x_print("IN HOUSE EVALUATION BASED ON KEYWORDS")
     x_print("IN COMPLETED...")
     x_print("PREPARING THE RESULTS...")
+    title = trim(title)
     x_print("TITLE: " + str(title))
     x_print("URL: " + str(url))
     x_print("------------------------")
     
-    if len(text)>DB_TEXT_SIZE*2:
-        x_print(text[0:DB_TEXT_SIZE*2]+" [...]")
+    if len(text)>DB_TEXT_SIZE:
+        x_print(text[0:DB_TEXT_SIZE]+" [...]")
         x_print("PARTIAL TEXT PRESENTED")
         x_print("THE TEXT IS TOO LARGE")
     else:
@@ -932,7 +1084,7 @@ def verify_page_content(url, title, text):
     x_print("DB CONTENT: " + text[0:text.find(" ", text.find(" ", DB_TEXT_SIZE))])
     
     learned_keywords.append(text[0:text.find(" ", DB_TEXT_SIZE)])
-    text_quality_score = 0
+    # text_quality_score = 0
     x_print("FINAL QUALITY SCORE (QS) " + str(text_quality_score))
     if text_quality_score > QUALITY_SCORE:
         x_print("URL PASSES THE QUALITY SCORE TEST: " + str(text_quality_score))
@@ -962,31 +1114,33 @@ def extract_urls(url, html):
     global url_count
     global img_count
     
+    check_media(url)
+
     x_print("\nPROCESSING url extraction process\nurl: " + url)
     soup = BeautifulSoup(html, "html.parser")
-            
+    
     for link in soup.find_all("a"):
         try:
             link = link.get("href")
             link = fix_link(link, url)
 
             print(link)    
+            check_media(link)
             
             if (verify_url_with_query(link)):
                urls_buffer.append(link)
         except:
             pass                
     return urls_buffer
-
         
 def check_pattern(pattern, html):
     import re
-    vidlinks = re.findall(pattern, html) #find all between the two parts in the data
-    #print(vidlinks[0] + ".m3u8") #print the full link with extension
+    vid_links = re.findall(pattern, html) #find all between the two parts in the data
+    #print(vid_links[0] + ".m3u8") #print the full link with extension
 
-    if (len(vidlinks)>0):
+    if (len(vid_links)>0):
         with open("keywords", "a") as file:
-            for rc in vidlinks:
+            for rc in vid_links:
                 x_print("VOD FOUND")
                 x_print("data: " + rc)
                 file.write("M3U-VOD : " + str(rc) + "\n")
@@ -1006,19 +1160,40 @@ def fix_link(link, root_url):
             link = root_url
         link = "https:" + str(link)
     if(link[0:1] == "/"):
+        # Hacking time :)
+        # This is not recommended... 
+        # If you are beginner in programming... 
+        # What the hell lets try anyway...
+        # Will try to figure out the bug later :)
         link = root + str(link)
+        guess_url = link
+        
+        print("Can't determine url will hack the url...")
+        print("First url guess: " + guess_url)
+        check_media(guess_url)
+
+        guess_url = root_url + str(link)        
+        print("Second url guess: " + guess_url)
+        check_media(guess_url)
+
+        return None
+
     return link
 
 def get_root(url):
     end_of_url = url.find('/',12)
     root = url[0:end_of_url]
     return root
-
+    
 def clean_text(url_text):
     url_text = url_text.lower()
     url_text = url_text.replace("\xa0", "")
     url_text = url_text.replace("\'", "'")
     url_text = url_text.replace("\\'", "'")
+    url_text = url_text.replace("  ", " ")
+    url_text = url_text.replace("-", " ")
+    url_text = url_text.replace(",", " ")
+    url_text = url_text.replace(".", " ")
 
     while url_text.find("\n")>=0:
         url_text = url_text.replace("\n", " ")
@@ -1034,70 +1209,9 @@ def clean_text(url_text):
         word = clean_word(i)
         new_clean_text = new_clean_text + " " + i
 
+    new_clean_text = trim(new_clean_text)
+
     return new_clean_text
-
-def extract_only_urls(url, html):
-
-    x_print("\nStarting SOUP\n")
-    soup = BeautifulSoup(html, "html.parser")
-
-    for links in soup.find_all("a"):
-
-        try:
-            link = links.get("href")
-            if link in urls_visited:
-                #x_print("Link has all ready been downloaded in visited list global_memory")
-                continue
-        except:
-            pass
-    
-        # Check if the url is long enoughs to process
-        x_print("____________________________________________")
-        x_print("\nVERIFY size of url")
-        x_print("URL: " + link)
-
-        if (len(link) < MIN_LINK_SIZE):
-            x_print("\ninvalid link length to small - FAILED")
-            continue
-
-        if (len(link) > MAX_LINK_SIZE):
-            x_print("\ninvalid link length to long - FAILED")
-            # 
-            continue
-        x_print("SIZE OF THE LINK - PASSED")
-        x_print("Stop url list passed - PASSED")
-
-        # Rebuild the site if the url root is missing
-        if not link is None:
-            root_path = ""
-            if link.find("http") < 0:
-                # get root https path
-                root_path = fix_link(url, link)
-
-                if not root_path in urls_buffer:
-                    x_print("Adding root path\n" + root_path)
-                    urls_buffer.append(root_path)
-
-                if link[0] == "/":
-                    link = root_path + link
-                else:
-                    link = root_path + "/" + link
-
-        x_print("\nROOT PATH VERIFICATION - PASSED")
-        x_print("URL: " + link)
-        
-
-        if verify_link(link):
-            x_print("\nLink verification test - PASSED\n")
-            x_print("URL: " + link)
-            
-            
-            if not link in urls_buffer:
-                print("Addinf url to urls_buffer to feed scraper-spider")
-                print("Url: " + str(link))
-                urls_buffer.append(link)                    
-        else:
-            continue
 
 # this function extract urls or img from a url
 # it returns a list of urls or images tags
@@ -1106,11 +1220,15 @@ def extract_images(url, html_file):
     numLink = 0
     
     global img_count
-    global image_link_memory
+    global urls_image_buffer
+    
     x_print("\nPROCESSING image tags extraction: \nURL: " + url + "\n")
     x_print("Creating soup object...")
+    
     soup = BeautifulSoup(html_file, "html.parser")
+    
     x_print("STARTING IMAGE EXTRACTION")
+    
     for link in soup.find_all("img"):
         try:            
             numLink = numLink + 1
@@ -1120,15 +1238,30 @@ def extract_images(url, html_file):
                 continue
             else:
                 link = fix_link(link,url)
-                if not link in image_link_memory:
+                if not link in urls_image_buffer:
                     try:
-                        check_email(link)
-                        download(link)
+                        result = verify_url_basic_check(link)
 
-                        img_count = img_count + 1
-                        urls_visited.append(link)
-                        image_link_memory.append(link)
-                        print("Image count: " + str(img_count) ) 
+                        if result:
+                            check_email(link)
+                            download(link)
+                            
+                            # Slow down or we will 
+                            # be banned...
+                            relax(TIME_LOCK) 
+
+                            img_count = img_count + 1
+                            urls_visited.append(link)
+                            urls_image_buffer.append(link)
+                            print("Image count: " + str(img_count) )
+                            print("Url count: " + str(url_count) )
+                        
+                        else:
+                            print("Url failed basic test...")
+                            continue
+
+                        # Double TIME_LOCK
+                        relax(TIME_LOCK)     
                     except:
                         continue
         except:
@@ -1141,39 +1274,33 @@ def save_urls(urls, file_name):
     if urls == None:
         return False
     
-    global url_global_memory
+    # Clean the file before inserting the valuesss
+    with open(file_name, "w", encoding="utf-8") as file:
+        file.write("")
+        file.close()
+    
+    clean_memory = []
     with open(file_name, "a", encoding="utf-8") as file:
         for url in urls:
             if not url is None:
-                if not url in url_global_memory:
+                if not url in clean_memory:
                     file.write(url + "\n")
-                    url_global_memory.append(url)
+                    clean_memory.append(url)
         file.close()
+        urls = clean_memory
     return urls 
-    
-def verify(url):
-    if (url == None):
-        return True
-    if (len(url) < MIN_LINK_SIZE):
-        return True
-    if (len(url) > MAX_LINK_SIZE):
-        return True
-    if (url == None):
-        return True
-    else:
-        return False
 
 def get_extension(response):
-    mtype = response.headers.get("Content-Type", "image/jpeg")
-    mtype = mtype.partition(";")[0]
+    m_type = response.headers.get("Content-Type", "image/jpeg")
+    m_type = m_type.partition(";")[0]
 
-    if "/" not in mtype:
-        mtype = "image/" + mtype
+    if "/" not in m_type:
+        m_type = "image/" + m_type
 
-    if mtype in MIMETYPE_MAP:
-        return MIMETYPE_MAP[mtype]
+    if m_type in MIMETYPE_MAP:
+        return MIMETYPE_MAP[m_type]
 
-    exts = mimetypes.guess_all_extensions(mtype, strict=False)
+    exts = mimetypes.guess_all_extensions(m_type, strict=False)
     if exts:
         exts.sort()
         return exts[-1][1:]
@@ -1213,14 +1340,29 @@ MIMETYPE_MAP = {
 }
 
 def check_stop_words_in_urls(url):
-    for stop_url in stop_urls:
+
+    print("Checking url for stop words...")
+    print("URL: " + str(url))
+    
+    for stop_url_keyword in stop_urls:
         try:
-            if (url.find(stop_url) >= 0):
+            stop_url_keyword = stop_url_keyword.replace("\n","")
+            #print("Checking: " + str(stop_url_keyword))
+            if (url.find(stop_url_keyword) >= 0):
                 return False
-            else:
-                return True
         except:
            return False
+    return True
+    
+def verify_url_basic_check(url):
+    if (url == None):
+        return False
+    if (len(url) < MIN_LINK_SIZE):
+        return False
+    if (len(url) > MAX_LINK_SIZE):
+        return False
+    else:
+        return True
 
 def load_stop_urls():
     global stop_urls
@@ -1230,7 +1372,7 @@ def load_stop_urls():
 
 def load_profile():
     global stop_urls
-    x_print("LOADING USER PROFIL")
+    x_print("LOADING USER PROFILE")
     file = open("profile", "r")
     smart_user_profile = file.readlines()
     return smart_user_profile
@@ -1269,13 +1411,16 @@ def prepare_keywords_for_database(title):
                 keywords = keywords.replace(ix, " ")
     return keywords
             
-def clean_up_url_buffers(urls_buffer):
+def clean_up_buffer(urls):
     clean = []
-    for i in urls_buffer:
-        if not i in clean:
-            clean.append(i)
-    urls_buffer = clean
-    clean.clear()
+    for url in urls:
+        if verify_url_basic_check(url):
+            if check_stop_words_in_urls(url):
+                if not url in clean:
+                    url = trim(url)
+                    url = url.replace("\n","")
+                    clean.append(url)
+    return clean
  
 def get_title(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -1301,30 +1446,68 @@ def shuffle_list(list):
     # Random URL search path 
     # We may hit the jackpot
     random.shuffle(list)
-        
+    random.shuffle(list)
+    random.shuffle(list)
+
+def url_verification(url):
+    
+    x_print("STARTING URL EXTRACTION PROCESS")
+    x_print("STARTING URL VERIFICATION")
+    result = verify_url_basic_check(url) 
+    
+    if (result==True):
+        result = check_stop_words_in_urls(url)
+    else:
+        x_print("URL VERIFICATION FAILED - IN BASIC CHECK")
+        x_print("URL: " + str(url))
+    return result
+    
 def start_image_miner(): 
+    
+    # Connect memory buffers
     global save_count
     global img_count
     global url_count
     global urls_buffer
     global urls_image_buffer
     global urls_visited
+    global scraper_dictionary
+    global learned_keywords
+    global query_history
 
     x_print("Starting image mining process...\n")
     x_print("Loading the memory...\n")
-    load_global_memory_url()
+    load_memory()
+    
+    print("CLEANING BUFFERS")
+    # Pro-active clean up process
+    urls_buffer = clean_up_buffer(urls_buffer)
+    urls_visited = clean_up_buffer(urls_visited)
+    urls_image_buffer = clean_up_buffer(urls_image_buffer)
+    scraper_dictionary = clean_up_buffer(scraper_dictionary)
+    urls_visited = clean_up_buffer(urls_visited)
+    urls_image_buffer = clean_up_buffer(urls_image_buffer)
+
     page = ""
     for url in urls_buffer:
+
+        result = url_verification(url)
         
-        x_print("STARTING URL EXTRACTION PROCESS")
+        if (result==False):
             
+            x_print("URL VERIFICATION FAILED - STOP WORD in URL")
+            x_print("URL: " + str(url)) 
+            continue
+
+        x_print("URL VERIFICATION PASSED...")
+
         try:
             page = requests.get(str(url), headers={'User-Agent': ua.random})  
     
             # TEST
-            # page, status, contentType = requests_hack(url
+            # page, status, contentType = requests_urllib(url
         except:
-            print("Error in resquest unhandeled")
+            print("Error in resquest Unhandled")
             relax(10)
             continue
         
@@ -1336,16 +1519,20 @@ def start_image_miner():
         except:
             print("Error in stats")
         try:        
+            
             title = get_title(page.text)
             text = get_html_textual_content(page.text)
             url, title, text = format_for_pattern_check(url, title, text)
             result = verify_page_content(url, title, text)
+
+            if (result==False):
+                continue
+
         except:
             print("Error in NLP section")
             continue
         
         try:        
-        
             if (result):
                 urls_buffer = extract_urls(url, text)
                 urls_image_buffer = extract_images(url, page.text)
@@ -1354,39 +1541,48 @@ def start_image_miner():
         except:
             print("ERROR in extraction process")
         
-        try:  
-            db_txt = ""
-            keywords = prepare_keywords_for_database(title)
-            keywords = clean_text(keywords)
-            keywords = trim(keywords)
+        try:
+            if (result):  
+                db_txt = ""
+                keywords = prepare_keywords_for_database(title)
+                keywords = clean_text(keywords)
+                keywords = trim(keywords)
 
-            db_txt = text[0:DB_TEXT_SIZE]
-            
-            if len(text) < DB_TEXT_SIZE:
-                db_txt =  text[0:len(text)]   
-            
-            db_txt = clean_text(db_txt)
-            db_txt = title + " " + keywords + " " + db_txt
-            insert_url_data(str(url),str(db_txt), str(title))
-            
-            shuffle_list(urls_buffer) 
-            
-            learn_keywords(str(url),str(db_txt), str(title))
-            clean_up_url_buffers(urls_buffer)
-            clean_up_url_buffers(urls_visited)
-            shuffle_list(urls_buffer)
-            save_global_memory_urls()
+                db_txt = text[0:DB_TEXT_SIZE]
+                
+                if len(text) < DB_TEXT_SIZE:
+                    db_txt =  text[0:len(text)]   
+                
+                db_txt = clean_text(db_txt)
+                db_txt = title + " " + keywords + " " + db_txt
+                insert_url_data(str(url),str(db_txt), str(title))
+                learn_keywords(str(url),str(db_txt), str(title))
+                
+                save_count = save_count + 1
+                shuffle_list(urls_buffer)
+                
+                if (SAVE_COUNT<save_count):
+                    print("SAVE COUNTER IS AT THE LIMIT")
+                    
+                    print("CLEANING BUFFERS")
+                    urls_buffer = clean_up_buffer(urls_buffer)
+                    urls_visited = clean_up_buffer(urls_visited)
+                    urls_image_buffer = clean_up_buffer(urls_image_buffer)
+                    
+                    print("SAVE URLS")
+                    save_memory()
+                    save_count = 0
+
+                    src = "./archives/directors_picks/"
+                    trg = "./media/"
+
+                    save_to_archive(src, trg)
         except:
             continue
 
 
-# Extrae los correos de una única URL
-def requests_hack(url):
-
-    print ("Searching emails... please wait")
-
-    count = 0
-    listUrl = []
+# Options 
+def requests_urllib(url):
 
     req = urllib.request.Request(
             url, 
@@ -1400,6 +1596,7 @@ def requests_hack(url):
     contentType = conn.info().get_content_type()
 
     return conn, status, contentType
+
 def main():
     # Start image spider/miner program
     x_print("Start image-miner program")
