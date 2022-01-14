@@ -40,7 +40,7 @@ More intelligence is on the way...
 
 Image-Miner will have the hability to juge of the quality of an image.
 
-**Iamge-Miner in action**
+**IMAGE-MINER IN ACTION**
 Visit the web site to view some of the images Image-Miner found during the testing phase of the project. 
 
 **Visite our Website**
