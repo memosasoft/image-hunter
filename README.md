@@ -23,25 +23,25 @@ It uses a simple Quality Score to tweak the intelligence of the scraper.
 There is also on config.env file that lets play with the parameters of the scrapper.
 
 **[CONFIG]**
-RELAX_TIME = 1
-TIME_LOCK = 2 
-QUALITY_SCORE = 120
-KEYWORDS_IN_LINK = 2
-MIN_LINK_SIZE = 10
-MAX_LINK_SIZE = 200
-MIN_WORD_SIZE = 1
-MIN_STEM_SIZE = 4
+-RELAX_TIME = 1
+-TIME_LOCK = 2 
+-QUALITY_SCORE = 120
+-KEYWORDS_IN_LINK = 2
+-MIN_LINK_SIZE = 10
+-MAX_LINK_SIZE = 200
+-MIN_WORD_SIZE = 1
+-MIN_STEM_SIZE = 4
 
-DOWNLOAD_OPTION = 1
-DOWNLOAD_HTML = 1
-ANALYSIS_MAX_WORDS = 2000
-MIN_IMAGE_SIZE = 10000
-DEBUG_LOG = OFF
-DEBUG_CONSOLE = ON
-QUERY_BOOST = OFF
-DB_TEXT_SIZE = 100
-SAVE_COUNT = 10
-DIRECTORS_PICKS = 300000
+-DOWNLOAD_OPTION = 1
+-DOWNLOAD_HTML = 1
+-ANALYSIS_MAX_WORDS = 2000
+-MIN_IMAGE_SIZE = 10000
+-DEBUG_LOG = OFF
+-DEBUG_CONSOLE = ON
+-QUERY_BOOST = OFF
+-DB_TEXT_SIZE = 100
+-SAVE_COUNT = 10
+-DIRECTORS_PICKS = 300000
 
 **Supported Image formats**
 psd,apng,avif,bmp,gif,ico,cur,tif,tiff,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp,webm,ogg,wav,tiff,ico,jpg,gif,png,bmp
@@ -54,8 +54,8 @@ More intelligence is on the way...
 - Web interface and web service
 - Vision developpement 
 - Enhance AI
-- Better searching habilities
-- Better roaming habilities
+  - Better searching habilities
+  - Better roaming habilities
 
 **NEXT PHASE**
 
