@@ -33,7 +33,8 @@ def search_google(query):
     # search(str: term, int: num_results=10, str: lang="en")
     
     i_counter = 1
-    for url in search(query, 50, lang="en"):
+    #for url in search(query, 40, lang="en"):
+    for url in search(query, 40):
         listUrl.append(url)
         # print(str(i_counter) + " - " + url)
         i_counter = i_counter + 1
