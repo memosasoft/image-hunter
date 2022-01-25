@@ -23,19 +23,22 @@ I also want to develop a profil component that will contain user specific inform
 - It has a simple scoring system QS (Quality Score)
 - It extracts and reads html content
 - It as an simple html interface
-- It web server is being implemented 
 - It as a database to keep track of information
 - It build a depot of all images 
 - It keeps a history
 
 There is also one config.env file that lets you play with the parameters of the scrapper.
 
+Web server version is being implemented.
+ 
 **Signature matching keywords**
 It matches keywords with multiple signatures hits that are simple sections of the keyword. 
 
-The signature matching works really well. I have it set on 3 for the minimum stem (section of word). The signature matching give a score to text information enabling the system to scan web content and make a decision to download or not the links or the images on the html page. 
+The signature matching works really well. I have it set on 3 for the minimum pattern (section of word). The pattern matching give a score to text information. This score enables the system to scan web content and make a decision to download or not the links or the images on the html page. 
 
-It uses a simple Quality Score to tweak the intelligence of the scraper. Top performence depends on many factors but with a quality score of about 20 and decent queries the results are very impressive. 
+It uses a simple Quality Score (QS) to tweak the intelligence of the scraper. Top performence depends on many factors but with a quality score of about 20 and decent queries the results are very impressive. 
+
+As long as the search results are good the scrapper does an amazing job.
 
 **Supported Image formats**
 psd,apng,avif,bmp,gif,ico,cur,tif,tiff,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp,webm,ogg,wav,tiff,ico,jpg,gif,png,bmp
@@ -47,6 +50,8 @@ During testing in the past 4 weeks it gathers : 85000 images and icons.
 More intelligence is on the way...
 
 **MY WISHLIST for 2022**
+- Better search results
+  -  Search API   
 - Vision developpement 
 - Enhance AI
   - Better searching abilities
