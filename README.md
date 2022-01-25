@@ -30,32 +30,35 @@ I also want to develop a profil component that will contain user specific inform
 There is also one config.env file that lets you play with the parameters of the scrapper.
 
 Web server version is being implemented.
- 
+ 
 **Signature matching keywords**
-It matches keywords with multiple signatures hits that are simple sections of the keyword. 
 
-The signature matching works really well. I have it set on 3 for the minimum pattern (section of word). The pattern matching give a score to text information. This score enables the system to scan web content and make a decision to download or not the links or the images on the html page. 
+It matches keywords with multiple pattern hits that are simple sections of the keyword. 
 
-It uses a simple Quality Score (QS) to tweak the intelligence of the scraper. Top performence depends on many factors but with a quality score of about 20 and decent queries the results are very impressive. 
+The pattern matching works really well. I have it set on 3 for the minimum pattern. The pattern matching gives the ability to judge the quality of keyword information surrounding the image. It gives a score to text information in relation to the user's query. This score enables the system to scan web content and make a decision to download or not the links or/and the images on the html page. It uses a Quality Score (QS) to tweak the severity of the scrapers search. Top performance depends on many factors but with a quality score of about 20 and decent queries the results are very impressive. As long as the search results are good the scrapper does an amazing job. 
 
-As long as the search results are good the scrapper does an amazing job.
+I did believe it would work so well. 
+I still have lots of work. This project is long terme. 
 
 **Supported Image formats**
 psd,apng,avif,bmp,gif,ico,cur,tif,tiff,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp,webm,ogg,wav,tiff,ico,jpg,gif,png,bmp
 
+**Database with SQLite3**
 Database Integration is completed with sqlite.
 
+**Image depot**
 During testing in the past 4 weeks it gathers : 85000 images and icons. 
 
+**Learning to learn**
 More intelligence is on the way...
 
 **MY WISHLIST for 2022**
 - Better search results
-  -  Search API   
+  -  Search API   
 - Vision developpement 
 - Enhance AI
-  - Better searching abilities
-  - Better roaming abilities
+  - Better searching
+  - Better roaming 
 
 **NEXT PHASE**
 Image-Miner will have the ability to judge the quality of an image.
