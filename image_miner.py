@@ -1,24 +1,23 @@
+# -*- coding: UTF-8 -*-
 #!/usr/bin/env python
 import configparser
-import datetime  # needed to create unique image file name
 import mimetypes  # needed for download functionality
+import os
 import shutil  # to save it locally
-import sqlite3
 import time
 # Importing Necessary Modules
 import urllib.request
 import uuid
 import webbrowser
-from sqlite3 import Error
-from urllib.request import HTTPError, URLError
-import os
+#from urllib.request import HTTPError, URLError
 
-import requests  # to get image from the web
-from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
 from googlesearch import search
 from nturl2path import url2pathname
-from search import search_yahoo
+from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
+
+from sqlite3 import Error
+import requests  # to get image from the web
 
 # from tools.crazy_code import clean_html_and_javascript
 
@@ -42,6 +41,9 @@ current_img_size = 0
 
 alt_img_test = ""
 media_files = "psd,apng,avif,bmp,gif,ico,cur,tif,tiff,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp,webm,ogg,tiff,ico,jpg,gif,png,bmp"
+
+html_file_name = str(uuid.uuid4())
+html_img_counter = 0
 
 img_count = 0
 url_count = 0
@@ -76,8 +78,8 @@ pattern_memory = []
 query_history = []
 
 # Learning component
-scraper_dictionary = []
-
+dictionary = []
+learned_relation = []
 # Learning array for text the system reads
 learned_keywords = []
 
@@ -95,8 +97,8 @@ CLEAN_START = str(configuration.get('CONFIG', 'CLEAN_START'))
 TIME_LOCK = float(configuration.get('CONFIG', 'TIME_LOCK'))
 
 QUALITY_SCORE = float(configuration.get('CONFIG', 'QUALITY_SCORE'))
-KEYWORDS_IN_LINK = int(configuration.get('CONFIG', 'KEYWORDS_IN_LINK'))
-
+KEYWORDS_IN_LINK = str(configuration.get('CONFIG', 'KEYWORDS_IN_LINK'))
+NUMBER_OF_KEYWORDS_IN_LINK = int(configuration.get('CONFIG', 'NUMBER_OF_KEYWORDS_IN_LINK'))
 MIN_URL_SIZE = int(configuration.get('CONFIG', 'MIN_URL_SIZE'))
 MAX_URL_SIZE = int(configuration.get('CONFIG', 'MAX_URL_SIZE'))
 MAX_WORD_SIZE = int(configuration.get('CONFIG', 'MAX_WORD_SIZE'))
@@ -127,14 +129,14 @@ MIN_IMAGE_SIZE = int(configuration.get('CONFIG', 'MIN_IMAGE_SIZE'))
 MAX_FILE_NAME_SIZE = int(configuration.get('CONFIG', 'MAX_FILE_NAME_SIZE'))
 DEBUG_CONSOLE = str(configuration.get('CONFIG', 'DEBUG_CONSOLE'))
 DEBUG_LOG = str(configuration.get('CONFIG', 'DEBUG_LOG'))
-
+FREELY_GRAB_URLS = str(configuration.get('CONFIG', 'FREELY_GRAB_URLS'))
 DIG_FOR_URLS = str(configuration.get('CONFIG', 'DIG_FOR_URLS'))
 MAX_WORKSPACE_SIZE = int(configuration.get('CONFIG', 'MAX_WORKSPACE_SIZE'))
 MIN_QUALITY_IMAGE_SIZE = int(configuration.get('CONFIG', 'MIN_QUALITY_IMAGE_SIZE'))
 PROGRAM_PATH = str(configuration.get('CONFIG', 'PROGRAM_PATH')) 
-        
+URL_LIMIT_AMOUNT  = int(configuration.get('CONFIG', 'URL_LIMIT_AMOUNT'))
 
-def init_program():
+def init_program(query):
     global query_size
     global query_history  
     global current_query
@@ -161,7 +163,10 @@ def init_program():
     # x_print("SETUP PROCESS")
     # x_print("Starting setup process and cleanup")
     setup_process(user_input)
-    query = input("What type of images you want to spider?")
+    
+    if (query==""):
+        query = input("What type of images you want to spider?")
+    
     query_size = str(len(query.split(" ")))
     
     # THIS IS A PERSONAL CHOICE AND A TRICK TO GET 
@@ -427,23 +432,30 @@ def multiple_search_prototype(query):
     # Add extra image related search terms to enhance
     # the search results the list is in config.env
     
+    query = prepare_query(query)
+
     search_urls = get_search_urls(trim(query))
     print("QUERY: " + str(query) )
 
+    query = prepare_query(prototype_rq1)
     search_urls = get_search_urls(trim(prototype_rq1))
     print("QUERY 2: " + str(prototype_rq1) )
-
+    
+    query = prepare_query(prototype_rq2)
     search_urls = get_search_urls(trim(prototype_rq2))
     print("QUERY 3: " + str(prototype_rq2) )
 
+    query = prepare_query(prototype_rq3)
     search_urls = get_search_urls(trim(prototype_rq3))
     print("QUERY 4: " + str(prototype_rq3) )  
 
+    query = prepare_query(prototype_rq4)
     search_urls = get_search_urls(trim(prototype_rq4))
     print("QUERY 5: " + str(prototype_rq4) )
 
     # need to be properly programmed
     original_q = original_q + " wallpaper"
+    query = prepare_query(original_q)
     
     search_urls = get_search_urls(trim(original_q))
     print("LAST QUERY: " + str(original_q) )
@@ -502,6 +514,21 @@ def multiple_search_prototype(query):
     #random.shuffle(search_urls)
     return search_urls
 
+def prepare_query(query):
+    query = query.replace(" ", "+")
+
+def check_critical_amount_of_urls(list_of_urls):
+
+    for url in list_of_urls:
+        result = verify_keywords_in_link(url)
+        if result == False:
+            list_of_urls.remove(url)
+            #print("removing url: " + str(url))
+
+    return list_of_urls
+
+
+
 def check_search_urls(list_of_urls):
 
     for url in list_of_urls:
@@ -509,8 +536,8 @@ def check_search_urls(list_of_urls):
         
         if result == False:
             list_of_urls.remove(url)
-            print("removing url: " + str(url))
-  
+            #print("removing url: " + str(url))
+
     return list_of_urls
 
 def add_list_to_list(list_to_grow, list_to_add):
@@ -552,6 +579,8 @@ def save_memory():
     global urls_visited_buffer
     global urls_image_buffer
     global stop_urls
+    global learned_relation
+    global dictionary
     
     #shuffle_list(urls_buffer)
     x_print("Saving memory")
@@ -566,6 +595,10 @@ def save_memory():
     x_print("Visited downloaded images memory saved")
     
     stop_urls = save_list(stop_urls, "./intelligence/stop_urls")
+    dictionary = save_list(dictionary, "./intelligence/dictionary")
+    learned_relation = save_list(learned_relation, "./intelligence/learned_relation")
+  
+  
     x_print("stop_urls saved")
     
 def load_memory():
@@ -575,7 +608,8 @@ def load_memory():
     global urls_visited_buffer
     global query_history
     global search_boost
-    global scraper_dictionary
+    global dictionary
+    global learned_relation
     global learned_keywords
     global stop_urls
 
@@ -590,9 +624,13 @@ def load_memory():
     x_print("Downloaded images memory loaded")
 
     stop_urls = load_list("./intelligence/stop_urls", stop_urls)  
-
+    dictionary = load_list("./intelligence/dictionary", dictionary)  
+    learned_relation = load_list("./intelligence/learned_relation", learned_relation)  
+   
 def insert_search_urls(url, query):
     try:
+        
+        import sqlite3
         db_file = "./archives/data/data-miner.db"
         conn = sqlite3.connect(db_file)
 
@@ -633,6 +671,8 @@ def insert_url_data(url, title, short_text):
 
     try:
         db_file = "./archives/data/data-miner.db"
+        
+        import sqlite3
         conn = sqlite3.connect(db_file)
         c = conn.cursor()
         c.execute("INSERT INTO url (url, title, text) VALUES (?,?,?)",
@@ -789,10 +829,10 @@ def download(url):
                 x_print("VERIFICATION PASSED...")
                 x_print("Second url test for image source")
 
-                result = verify_link(url)
-                if (not result):
-                    x_print("VERIFICATION Failed...")
-                    return None
+                #result = verify_keywords_in_link(url)
+                #if (not result):
+                #    x_print("VERIFICATION Failed...")
+                #    return None
 
             x_print("Second test for image URL")
             x_print("VERIFICATION PASSED...")
@@ -1209,9 +1249,9 @@ def format_title(title, ext):
 
 
 def add_to_dic(i):
-    global scraper_dictionary
-    if i not in scraper_dictionary:
-        scraper_dictionary.append(i)
+    global dictionary
+    if i not in dictionary:
+        dictionary.append(i)
 
 
 def get_search_urls(query):
@@ -1221,14 +1261,23 @@ def get_search_urls(query):
     bing_results = []
 
     import search as search_interface
-    google_results = search_interface.search_google(query)
-    #yahoo_results = search_interface.search_yahoo(query)
+    try:
+        google_results = search_interface.search_google(query)
+    except:
+        try:
+            google_results = search_interface.search_google(query)
+        except:
+            pass 
+        pass    
+    yahoo_results = search_interface.search_yahoo(query)
     bing_results = search_interface.search_bing(query)
-    #print("Results found: " + str(len(search_urls)))
     
     search_urls = insert_in_buffer(google_results)
-    #search_urls = insert_in_buffer(yahoo_results)
+    search_urls = insert_in_buffer(yahoo_results)
     search_urls = insert_in_buffer(bing_results)
+    search_urls = check_search_urls(search_urls)
+
+    print("Results found: " + str(len(search_urls)))
     
     return search_urls
 
@@ -1303,30 +1352,61 @@ def load_title_into_dictionary(title):
     for i in title.split(" "):
         i = clean_word(i)
         i = check_stop_words(i)
-        dictionnary_learn(i)
+        learn(i)
 
 
-def dictionnary_learn(title):
-    # Insert some word in the system dictionnary
-    title = clean_text(str(title))
-    for word in title.split(" "):
-        word = clean_word(word)
+def learn(text):
 
-        import nlp as n
-        definition = n.definition(word)
-        if len(definition)==0:
-            continue
-        #synonyme = n.synonyms(word)
-        #stem = n.stem(word)
-        #word = word + "- stem: " + stem + " - definition: "
-              
-        for i in definition:
-            word = word + " : " + str(i)  
-        #word = word + " - synonyme: " + str(synonyme)
-        
-        if not word in scraper_dictionary:
-            scraper_dictionary.append(word)
+    global learned_relation
+    global dictionary
 
+    try:
+
+        index = 0
+        # Insert some word in the system dictionnary
+        text = clean_text(str(text))
+        temp_list = text.split(" ")
+        list_size = len(temp_list)
+
+        for word in temp_list:
+            word = clean_word(word)
+            word = check_stop_words(word)
+            
+            if (word == None) or word == "" or word == " ":
+                continue
+            
+            if (index >= 2) and ((index < list_size-2)):
+                previous_word = temp_list[index-1]
+                next_word = temp_list[index+1]
+                next_next_word = temp_list[index+2]
+                relation = previous_word + " " + word +  " " + next_word +  " " + next_next_word +  ": 1" 
+                if not word in learned_relation:
+                    learned_relation.append(relation)
+
+            index = index + 1
+
+            import nlp as n
+            definition = n.definition(word)
+            if len(definition)==0:
+                continue
+            #synonyme = n.synonyms(word)
+            #stem = n.stem(word)
+            #word = word + "- stem: " + stem + " - definition: "
+                
+            for i in definition:
+                word = word + " : " + str(i)  
+            #word = word + " - synonyme: " + str(synonyme)
+            
+            if not word in dictionary:
+                dictionary.append(word)
+
+            
+        learned_relation = save_list(learned_relation,"./intelligence/learned_relation")
+        dictionary = save_list(dictionary,"./intelligence/dictionnary")
+   
+    except:
+        input("Error in Learn...")
+        pass                
 
 def load_list(file_name, urls_list):
 
@@ -1503,12 +1583,13 @@ def clean_pattern(pattern):
     pattern = trim(pattern)
     return pattern
 
-def verify_link(link):
-    if KEYWORDS_IN_LINK == 0:
+def verify_keywords_in_link(link):
+    if KEYWORDS_IN_LINK == 'OFF':
         return True
 
     x_print("LINK VERIFICATION")
     global quality_score
+    quality_score = 0
     score = 0
 
     for pattern in query_history[0].split(" "):
@@ -1533,7 +1614,7 @@ def verify_link(link):
             if (len(pattern) >= MIN_WORD_SIZE):
                 score = score + 1
 
-                if score >= KEYWORDS_IN_LINK:
+                if score >= NUMBER_OF_KEYWORDS_IN_LINK:
 
                     x_print("ACCEPTED LINK - PATTERN MATCH SCORE : " +
                             str(quality_score))
@@ -1635,12 +1716,11 @@ def calculate_quality_score(short_text):
         global query_history
         global quality_score
         global pattern_memory
+
+        quality_score = 0
         
         pattern = ""
         patterns = populate_patterns(short_text)
-
-        print("Title patterns")
-        print("Double pattern vertifivation: ")
         print("MATRIX: " + str(patterns))
         meter = 0
         pattern_memory = []
@@ -1655,6 +1735,8 @@ def calculate_quality_score(short_text):
     except Error as e:
         x_print(e)
         print("Error in calculate_quality_score")
+
+    print("quality score=" + str(quality_score))
     return quality_score
 
 
@@ -1739,10 +1821,11 @@ def verify_content(url, title, text):
     # TO EVALUATE IF WE SHOULD DOWNLOAD THE IMAGES
     print("QS: " + str(quality_score))
 
-    if quality_score > QUALITY_SCORE:
+    if int(quality_score) > int(QUALITY_SCORE):
         x_print("INSERTING DATA IN DB")
         insert_url_data(str(url), str(title), str(preview))
-        dictionnary_learn(title)
+        learn(title)
+
     
     x_print("PREPARING THE RESULTS...")
     x_print("TITLE: " + str(title))
@@ -2111,7 +2194,8 @@ def extract_urls(url, html):
     global query_history
     global urls_buffer
     global urls_visited_buffer
-    global scraper_dictionary
+    global dictionary
+    global learned_relation
     global save_count
     global url_count
     global img_count
@@ -2139,6 +2223,9 @@ def extract_urls(url, html):
 
                 if qa > QUALITY_SCORE:
                     urls_buffer.append(link)
+            
+            if (FREELY_GRAB_URLS=='ON'):
+                urls_buffer.append(link)
                 
         except Error as e:
             x_print(e)
@@ -2250,7 +2337,7 @@ def hack_fix_again(link, root_url, guess_url):
 def clean_text(text):
 
     items = ["\xa0", "\xa0", \
-        "  ","-",",",".","\r","\t" \
+        "  ","-","|",",",".","(",")","[","]","{","}" \
             ,"\n","\"","\'","  "]
 
     text = text.lower()
@@ -2538,9 +2625,15 @@ def debug_info(info):
 def is_valid_img_url(url):
     return check_media(url)
 
-
-html_file_name = str(uuid.uuid4())
-html_img_counter = 0
+def first_dump(current_query):
+    html = ""
+    html = html = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="30" /><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>'
+    html = html + '<center><form action = "search.html" method = "POST"><input type = "submit" value = "Let go again!!!"></form><br></center>' 
+    html = html + '<center>Results for ' + current_query + '</center><br><center>The system is searching real-time the net, learning and thinking...</center><br><br></body></html>'
+    
+    f = open("./dev/results.html", "w")
+    f.write(str(html))
+    f.close()
 
 def dump_html(img, img_src):
     global current_title
@@ -2553,11 +2646,22 @@ def dump_html(img, img_src):
     global html_file_name
     global html_img_counter
     global current_patterns_hits
+
+    query_foler = current_query.replace(" ", "-")
     
     if HTML_IMAGE_PER_PAGE < html_img_counter:
         closing_dump(img_src, current_url)
         html_img_counter = 0
         html_file_name = str(uuid.uuid4())
+        current_query = query_history[0]
+        query_foler = current_query.replace(" ", "-")
+    
+
+    if HTML_IMAGE_PER_PAGE < html_img_counter+1:        
+        url = PROGRAM_PATH
+        open_web(str(url + "/BEST-RESULTS-" + query_foler + "-" + html_file_name + ".html"))
+        open_web(str(url + "/EVERYTHING-" + query_foler + "-" + html_file_name + ".html"))
+        
 
     html_img_counter = html_img_counter + 1
 
@@ -2628,15 +2732,22 @@ def dump_html(img, img_src):
 
         hit = True
 
-    current_query = query_history[0]
-    query_foler = current_query.replace(" ", "-")
-    
     if (hit == True):
     
         html = '<a href="' + img_src + '"><img  border="2" src="' + img_src + '" style="display:inline-block;width:180px;height:180px;object-fit:contain;" /></a>'
         f = open("./interface/BEST-RESULTS-" + query_foler + "-" + html_file_name + ".html", "a")
         f.write(str(html))
         f.close()
+        
+        if img_src.find("webp")>=0:
+            shutil.copy(img_src, "./dev/NpTzUs.webp")
+        
+        html = '<center><a href="' + current_root_url + '"><img src="'+ img_src + ' " alt="' + current_preview+ '" style="display:inline-block;width:40%;height:auto;object-fit:contain;"></a></center>'
+        html_code = html + '<center><center><b>TITLE: ' + current_title.capitalize() + '</b></center><a href="' + current_root_url + '">' + current_root_url + '</a></center><center><b>IMAGE KEYWORDS:</b>' + current_img_keywords.upper() + " [...] " + '</center>'
+        f = open("./dev/results.html", "a")
+        f.write(str(html_code))
+        f.close()
+
 
     html = '<a href="' + img_src + '"><img  border="2" src="' + img_src + '" style="display:inline-block;width:180px;height:180px;object-fit:contain;" /></a>'
     f = open("./interface/EVERYTHING-" + query_foler + "-" + html_file_name + ".html", "a")
@@ -2769,7 +2880,6 @@ def shuffle_list(list):
 
     # Random URL search path
     # We may hit the jackpot
- 
     #random.shuffle(list)    
 
 def url_verification(url):
@@ -2783,13 +2893,14 @@ def url_verification(url):
     if (result == True):
         result = check_stop_words_in_urls(url)
     else:
-        x_print("URL VERIFICATION FAILED - IN BASIC CHECK")
-        x_print("URL: " + str(url))
+        #x_print("URL VERIFICATION FAILED - IN BASIC CHECK")
+        #x_print("URL: " + str(url))
+        pass
     return result
 
 
 def url__img_verification(url):
-    x_print("STARTING URL VERIFICATION")
+    x_print("STARTING URL IMG VERIFICATION")
     result = check_url_img(url)
     if (not result):
         return False
@@ -2799,25 +2910,39 @@ def url__img_verification(url):
     if (result == True):
         result = check_stop_words_in_urls(url)
     else:
-        x_print("URL VERIFICATION FAILED - IN BASIC CHECK")
-        x_print("URL: " + str(url))
+        #x_print("URL VERIFICATION FAILED - IN BASIC CHECK")
+        #x_print("URL: " + str(url))
+        pass
     return result
 
 def close_loop():
 
     global save_count
+    global url_count
+    global img_count
     global urls_buffer
     global current_query
     global query_history
+    global stop_urls
+    global dictionary
+    global learned_relation
 
-    x_print("Random approche pattern...")
+    #x_print("Random approche pattern...")
     #shuffle_list(urls_buffer)
     print("SAVE COUNTER IS AT " + str(save_count))
+    print("IMAGES " + str(img_count))
+    print("URLS SPIDERED " + str(url_count))
+    print("URLS TO SPIDERED " + str(len(urls_buffer)))
+    relax(TIME_LOCK)
 
     if (SAVE_CYCLE < save_count):
         print("SAVE COUNTER IS AT THE LIMIT")
         print("CLEANING BUFFERS")
         urls_buffer = clean_up_buffer(urls_buffer)
+        urls_buffer = check_search_urls(urls_buffer)
+        
+        if (len(urls_buffer)>URL_LIMIT_AMOUNT):
+            urls_buffer = check_critical_amount_of_urls(urls_buffer)
 
         print("SAVE URLS")
 
@@ -2829,9 +2954,10 @@ def close_loop():
         #open_web(str(url))
         
         x_print("SAVING DATA")
-        save_list(stop_urls, "./intelligence/stop_urls")
-        save_list(query_history, "./intelligence/query_history")
-        save_list(scraper_dictionary, "./intelligence/scraper_dictionary")
+        stop_urls= save_list(stop_urls, "./intelligence/stop_urls")
+        query_history = save_list(query_history, "./intelligence/query_history")
+        dictionary = save_list(dictionary, "./intelligence/dictionary")
+        learned_relation = save_list(learned_relation, "./intelligence/learned_relation")
 
 def first_check(url):
     global urls_buffer
@@ -2851,7 +2977,7 @@ def first_check(url):
         return result
 
     x_print("\nFIRST URL VERIFICATION PASSED...")
-    result = verify_link(url)
+    #result = verify_keywords_in_link(url)
 
     if (not result):
         x_print("\nSECOND URL VERIFICATION FAILED...")
@@ -2970,7 +3096,9 @@ def start_image_miner():
     global urls_image_buffer
     global urls_visited_buffer
 
-    global scraper_dictionary
+    global dictionary
+    
+    global learned_relation
     global learned_keywords
     global query_history
     global search_boost
@@ -2992,7 +3120,9 @@ def start_image_miner():
     urls_buffer = clean_up_buffer(urls_buffer)
 
     # loading intelligence
-    scraper_dictionary = load_list("./intelligence/scraper_dictionary", scraper_dictionary)
+    dictionary = load_list("./intelligence/dictionary", dictionary)
+    learned_relation = load_list("./intelligence/learned_relation", learned_relation)
+    
     learned_keywords = load_list("./intelligence/learned_keywords", learned_keywords)
     query_history = load_list("./intelligence/query_history", query_history)
     search_boost = load_list("./intelligence/search_boost", search_boost)
@@ -3002,15 +3132,16 @@ def start_image_miner():
     x_print("Starting image mining process...\n")
     x_print("Loading the memory...\n")
     
-    url = PROGRAM_PATH
+    #url = PROGRAM_PATH
     # url="./interface"
-    open_web(url)
+    # open_web(url)
     #shuffle_list(urls_buffer)
+    first_dump(current_query)
 
     for url in urls_buffer:
         current_root_url = url
         current_url = url
-
+       
         print_loop_info(url)
         result = first_check(url)
 
@@ -3063,6 +3194,7 @@ def start_image_miner():
                             final = final + " " + word
 
                     if not final in learned_keywords:
+                        final = search_engine_filter(final)
                         learned_keywords.append(final)
                         # Save and reload
                         save_list(learned_keywords,"./intelligence/learned_keywords")
@@ -3079,6 +3211,12 @@ def start_image_miner():
 
 # Optional request object
 
+def search_engine_filter(final):
+    if "google" or "bing" or "yahoo" in final:
+        final = final.replace("google", " ") 
+        final = final.replace("bing", " ") 
+        final = final.replace("yahoo", " ") 
+    return final
 
 def requests_urllib(url):
 
@@ -3095,14 +3233,58 @@ def requests_urllib(url):
     return conn, status, contentType
 
 
-def main():
-    # Start image spider/miner program
+def main(query):
+    
     x_print("INITIATION OF THE SPIDER/SCRAPER")
-    init_program()
+    init_program(query)
 
     x_print("START MINER")
     start_image_miner()
 
+def start_html():
+    return '<html>'
 
-# Entry point
-main()
+def end_html():
+    return '</html>'
+
+def print_html(text):
+    text = str(text)
+    text = text.replace('\n', '<br>')
+    return '<p>' + str(text) + '</p>'
+
+if __name__ == '__main__':
+    import sys
+    import threading
+
+    query = ""
+    if (len(sys.argv)>1):
+        query = sys.argv[1]
+    
+    while (True):
+        
+        # Entry point
+        if (query==""):
+            #Created the Threads
+            t1 = threading.Thread(target=main(""))
+            t1.run()
+            t1.join()
+            t1.isDaemon(True)
+        
+        file = open("./data", "r")
+        query = file.readlines()
+    
+        try:
+                
+            if (query_memory != query):
+                #Created the Threads
+                t1 = threading.Thread(target=main(query[len(query)-1]))
+                t1.run()
+                t1.join()
+                t1.isDaemon(True)
+        except:
+            pass
+
+        relax(TIME_LOCK)
+        query_memory = query
+    
+
