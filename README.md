@@ -35,10 +35,9 @@ Web server version is being implemented.
 
 It matches keywords with multiple pattern hits that are simple sections of the keyword. 
 
-The pattern matching works really well. I have it set on 3 for the minimum pattern. The pattern matching gives the ability to judge the quality of keyword information surrounding the image. It gives a score to text information in relation to the user's query. This score enables the system to scan web content and make a decision to download or not the links or/and the images on the html page. It uses a Quality Score (QS) to tweak the severity of the scrapers search. Top performance depends on many factors but with a quality score of about 20 and decent queries the results are very impressive. As long as the search results are good the scrapper does an amazing job. 
+Top performance depends on many factors but with a quality score of about 20 and decent queries the results are very impressive. As long as the search results are good the scrapper does an amazing job. 
 
-I did believe it would work so well. 
-I still have lots of work. This project is long terme. 
+The pattern matching works really well.
 
 **Supported Image formats**
 psd,apng,avif,bmp,gif,ico,cur,tif,tiff,jpg,jpeg,jfif,pjpeg,pjp,png,svg,webp,webm,ogg,wav,tiff,ico,jpg,gif,png,bmp
@@ -61,7 +60,9 @@ More intelligence is on the way...
   - Better roaming 
 
 **NEXT PHASE**
-Image-Miner will have the ability to judge the quality of an image.
+Image-Miner will have the ability to judge the quality of an image. It all ready does a very impressif job with no visual information. 
+
+When the vision algorithm will be ready the software will do an amazing job.
 
 **IMAGE-MINER IN ACTION**
 Visit the web site to view some of the images Image-Miner found during the testing phase of the project. 
