@@ -1,6 +1,14 @@
 **Image-Miner**
 
-Image-Miner is an AI project. It is a smart image scraper. 
+Image-Miner is an AI project. It is evolving very quickly. It has new features that enable users to search the net in BAZOOKA mode. You can spider hundreds of websites for a quick summary and for image retrieval needs. I had many web interfaces giving the scrapper the ability to search a subject through a basic image search. 
+
+The scrapper does an excellent job when it downloads everything 
+
+DOWNLOAD_EVERYTHING = ON
+
+and then makes a selection thanks to the AI tools that are still being developed.
+
+It is more and and more a smart image scraper and basic search engine. 
 
 It uses Google, Bing and Yahoo.
 
@@ -14,7 +22,7 @@ I am also working on some intelligence and learning abilities. I connected the s
 
 The system also keeps history for learning purposes. 
 
-I also want to develop a profil component that will contain user specific information to guide the searching process. 
+I also want to develop a profile component that will contain user specific information to guide the searching process. 
 
 **Miner features and functionality**
 - Works with Google, Yahoo and Bing 
@@ -28,6 +36,58 @@ I also want to develop a profil component that will contain user specific inform
 - It keeps a history
 
 There is also one config.env file that lets you play with the parameters of the scrapper.
+
+[CONFIG]
+ANALYSIS_MAX_WORDS = 1000
+DEEP_ANALYSIS = OFF
+PREVIEW_SIZE = 500
+
+QUALITY_SCORE = 12
+KEYWORDS_IN_LINK = ON
+NUMBER_OF_KEYWORDS_IN_LINK = 1
+LEARNING_TFQST = 40
+LEARN_TO_BLOCK_URL = 0
+IMG_ALT_VERIFICATION = ON
+IMG_ALT_QS = 4
+
+MATCH_BOOST = OFF
+SEARCH_BOOST = OFF
+QUERY_BOOST = OFF
+
+DOWNLOAD_HTML = ON
+MAX_WORKSPACE_SIZE = 900000
+MIN_IMAGE_SIZE = 5000
+MIN_QUALITY_IMAGE_SIZE = 30000
+DIG_FOR_URLS = OFF
+DOWNLOAD_EVERYTHING = ON
+SPIDER_ALL_IMAGES = ON
+SAVE_SUBJECT_KEYWORDS = ON
+
+MIN_URL_SIZE = 10
+MIN_STEM_SIZE = 3
+MIN_WORD_SIZE = 2
+MAX_WORD_SIZE = 20
+MIN_PATTERN_SIZE = 4
+LONG_KEYWORD_SIZE = 18
+MAX_URL_SIZE = 170
+MAX_FILE_NAME_SIZE = 80
+
+TIME_LOCK = 5
+STEP_SCAN = 3
+SAVE_CYCLE = 10
+
+DEBUG_CONSOLE = ON
+DEBUG_LOG = OFF
+
+CLEAN_START = ON
+FREELY_GRAB_URLS = ON
+
+RANDOM_START = 200
+URL_LIMIT_AMOUNT = 1000
+HTML_IMAGE_PER_PAGE = 50
+NB_OF_SITE_TO_SPIDER = 100
+
+PROGRAM_PATH = file:///home/linux/Bureau/Programmation/image-miner-X/dev/image-hunter.html
 
 Web server version is being implemented.
  
@@ -60,7 +120,7 @@ More intelligence is on the way...
   - Better roaming 
 
 **NEXT PHASE**
-Image-Miner will have the ability to judge the quality of an image. It all ready does a very impressif job with no visual information. 
+Image-Miner will have the ability to judge the quality of an image. It all ready does a very impressive job with no visual information. 
 
 When the vision algorithm will be ready the software will do an amazing job.
 
