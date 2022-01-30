@@ -1,14 +1,31 @@
 **Image-Miner**
 
-Image-Miner is an AI project. It is evolving very quickly. It has new features that enable users to search the net in BAZOOKA mode. You can spider hundreds of websites for a quick summary and for image retrieval needs. I had many web interfaces giving the scrapper the ability to search a subject through a basic image search. 
+Image-Miner is an AI project. It is evolving very quickly. It has new features that enable users to search the net in BAZOOKA mode. You can spider hundreds of websites for a quick summary and for image retrieval needs. I added many web interfaces view giving the scrapper the ability to search a subject through a basic image search. The interface is in developpement and will be use Javascript.
 
-The scrapper does an excellent job when it downloads everything 
+The scrapper does an excellent job when it downloads everything flag is active
 
 DOWNLOAD_EVERYTHING = ON
 
-and then makes a selection thanks to the AI tools that are still being developed.
+Also watch these parameters. 
+Images under 1500 kb a not very intresting aand lack resolution.
 
-It is more and and more a smart image scraper and basic search engine. 
+MAX_WORKSPACE_SIZE = 900000
+MIN_IMAGE_SIZE = 5000
+MIN_QUALITY_IMAGE_SIZE = 30000
+
+The scraper-spider then makes a selection thanks to the AI tools that are still being developed.
+
+It verifies many thing like : tag info, path keywords, image keywords, page content and more...
+
+The only thing missing is the VISION module.
+
+It is every day more and and more a smart image scraper-spider and basic search engine. 
+
+But it is getting more complexe and bugs are being slipts in...
+
+Still need more testing and developpement.
+
+**Search Engine**
 
 It uses Google, Bing and Yahoo.
 
