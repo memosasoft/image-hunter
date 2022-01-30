@@ -28,12 +28,14 @@ if __name__ == '__main__':
     
         try:
                 
-            if (query_memory != query):
+            #if (query_memory != query):
                 #Created the Threads
-                t1 = threading.Thread(target=main(query[len(query)-1]))
-                t1.run()
-                t1.join()
-                t1.isDaemon(True)
+                #t1 = threading.Thread(target=main(query[len(query)-1]))
+                #t1.run()
+                #t1.join()
+                #t1.isDaemon(True)
+
+            pass
         except:
             pass
         miner.relax(1)
