@@ -141,4 +141,4 @@ When the vision algorithm will be ready the software will do an amazing job.
 Visit the web site to view some of the images Image-Miner found during the testing phase of the project. 
 
 **Visite our Website**
-https://image-miner.weebly.com/
+https://image-miner.weebly.com/ 
