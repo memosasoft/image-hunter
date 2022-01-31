@@ -97,8 +97,11 @@ I also want to develop a profile component that will contain user specific infor
 
 There is also one config.env file that lets you play with the parameters of the scrapper.
 
-**Note don't forget to change the PROGRAM_PATH**PROGRAM_PATH = file:///home/linux/Bureau/Programmation/image-miner-X/dev/image-hunter.html**
+**Note don't forget to change the PROGRAM_PATH**
 
+PROGRAM_PATH = file:///home/linux/Bureau/Programmation/image-miner-X/dev/image-hunter.html
+
+**WEB SERVER ON THE WAY**
 Web server version is being implemented.
  
 **Signature matching keywords**
