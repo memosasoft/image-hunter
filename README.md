@@ -1,8 +1,10 @@
 **Image-Miner**
 
-Image-Miner is an AI project. It implements ideas about Autonomous Agents, Machine Learning, Natural Language Processing and other Artificial Intelligence topics that interest me and I have an obsession about. Some of these ideas and concepts have been in my head for the past 25 years. 
+Image-Miner is an AI project. It implements ideas about Autonomous Agents, Machine Learning, Natural Language Processing and other Artificial Intelligence topics that interest me. Some of these ideas and concepts have been in my head for the past 25 years. They come from idea from work and life in general.
 
-The project is evolving very quickly. It has new features that enable users to search the net in BAZOOKA mode. 
+The project is evolving very quickly. 
+
+It has new features that enable users to search the net in BAZOOKA mode. 
 
 **BAZOOKA MODE**
 You can spider hundreds of websites for a quick summary and for now image retrieval needs and web page content. 
@@ -54,6 +56,7 @@ The best strategy is to download everything and then let the intelligence make t
 The images that are not selected by AI are stored in the workspace directory in the archives folder. The scraper-spider then makes a selection thanks to the AI tools that are still being developed. The user can then look in the workspace at images that were not selected by the user but that may be interesting. 
 
 Again the strengths comes archiving.
+
 **AI STRATEGIES**
 
 It verifies many things like : tag info, path keywords, image keywords, page content and more...
@@ -63,6 +66,7 @@ The only thing missing is the VISION module.
 It is every day more and more a smart image scraper-spider and basic search engine. But it is getting more complexe and bugs are being split in. 
 
 Still need more testing and development.
+
 **Search Engine**
 
 It uses Google, Bing and Yahoo.
