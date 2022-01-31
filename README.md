@@ -1,12 +1,40 @@
 **Image-Miner**
 
-Image-Miner is an AI project. It is evolving very quickly. It has new features that enable users to search the net in BAZOOKA mode. You can spider hundreds of websites for a quick summary and for image retrieval needs. I added many web interfaces view giving the scrapper the ability to search a subject through a basic image search. 
+Image-Miner is an AI project. It implements ideas about Autonomous Agents, Machine Learning, Natural Language Processing and other Artificial Intelligence topics that interest me and I have an obsession about. Some of these ideas and concepts have been in my head for the past 25 years. 
 
-The interface is in developpement and will use Javascript. I want an advance image viewing interface. 
+The project is evolving very quickly. It has new features that enable users to search the net in BAZOOKA mode. 
 
-If you have suggestion I am very open personne. 
+**BAZOOKA MODE**
+You can spider hundreds of websites for a quick summary and for now image retrieval needs and web page content. 
 
-Also welcome any help in the project. This is a learning project. 
+**WEB INTERFACE**
+I added many web interface views giving the scrapper the ability to search a subject through a basic image search. This view will popup when the image-miner.py script is started. 
+
+The interface is in developpement and will use Javascript. I want an advanced image viewing interface. 
+
+If you have suggestions I am a very open personne. 
+
+Also welcome any help in the project. 
+
+This is a learning project too 
+Well my philosophy is that everything is a learning project. 
+
+I will soon package everything and prepare installation documentation for quick installation of the scraper-spider.
+
+**MILESTONE**
+I found a way to generate my own search results giving the scraper the ability to search with less dependency on major search engines.. 
+
+The strength of the system comes from the archives. Memory in humain forgets things and where it has to go but the computer remembers everything if it is stored properly and efficiently. 
+
+Storing urls and url information for later use gives the system the ability to store related searches as it is searching for specific subjects. The archive url memory enables the system to generate after some time search results it needs. 
+
+For now this is possible only after weeks of use for now and it is still in developpement.
+**DYNAMIC DISTRIBUTED SEARCH ENGINE**
+But if the software is developed as a standalone application we could use every installation to save url information that can be after retransmitted anonymously to all stand alone application on the network creating a dynamic and distributed search engine that learns from its own queries and its search results. 
+
+After weeks of learning and using Google, Bing, Yahoo, Duck and Yandex. Gathering search results on specific topics but storing search results in the archives with encoded keyword information. After 6 week of testing and development I have over 100000 urls with information about their images and the content of their webpage. 
+
+The system is slowly becoming a search engine. It was the goal of the image retrieval project.
 
 **OPTIMAL CONFIG**
 
@@ -15,24 +43,26 @@ The scraper-spider does an excellent job when it downloads everything flag is ac
 DOWNLOAD_EVERYTHING = ON
 
 Also watch these parameters. 
-Images under 1500 kb a not very intresting aand lack resolution.
+Images under 1500 kb are not very interesting and lack resolution.
 
 MAX_WORKSPACE_SIZE = 900000
 MIN_IMAGE_SIZE = 5000
 MIN_QUALITY_IMAGE_SIZE = 30000
 
-The scraper-spider then makes a selection thanks to the AI tools that are still being developed.
+The best strategy is to download everything and then let the intelligence make the best selection it can. 
 
+The images that are not selected by AI are stored in the workspace directory in the archives folder. The scraper-spider then makes a selection thanks to the AI tools that are still being developed. The user can then look in the workspace at images that were not selected by the user but that may be interesting. 
+
+Again the strengths comes archiving.
 **AI STRATEGIES**
 
-It verifies many thing like : tag info, path keywords, image keywords, page content and more...
+It verifies many things like : tag info, path keywords, image keywords, page content and more...
 
 The only thing missing is the VISION module.
 
-It is every day more and and more a smart image scraper-spider and basic search engine. 
+It is every day more and more a smart image scraper-spider and basic search engine. But it is getting more complexe and bugs are being split in. 
 
-But it is getting more complexe and bugs are being slipts in. Still need more testing and developpement.
-
+Still need more testing and development.
 **Search Engine**
 
 It uses Google, Bing and Yahoo.
@@ -43,10 +73,11 @@ Basically it verifies keyword signature in html content, image filename, image p
 
 It also has multiple verification and strategies for url spidering. 
 
-I am also working on some intelligence and learning abilities. I connected the scraper to nltk and the system is building a definition dictionary, keyword relations, and learning from web pages content and queries. 
+I connected the scraper to nltk and the system is building a definition dictionary, keyword relations, and learning from web pages content and queries. 
 
 The system also keeps history for learning purposes. 
 
+Still working on some intelligence and learning abilities. 
 I also want to develop a profile component that will contain user specific information to guide the searching process. 
 
 **Miner features and functionality**
@@ -62,48 +93,7 @@ I also want to develop a profile component that will contain user specific infor
 
 There is also one config.env file that lets you play with the parameters of the scrapper.
 
-**[CONFIG]
-ANALYSIS_MAX_WORDS = 1000
-DEEP_ANALYSIS = OFF
-PREVIEW_SIZE = 500
-QUALITY_SCORE = 12
-KEYWORDS_IN_LINK = ON
-NUMBER_OF_KEYWORDS_IN_LINK = 1
-LEARNING_TFQST = 40
-LEARN_TO_BLOCK_URL = 0
-IMG_ALT_VERIFICATION = ON
-IMG_ALT_QS = 4
-MATCH_BOOST = OFF
-SEARCH_BOOST = OFF
-QUERY_BOOST = OFF
-DOWNLOAD_HTML = ON
-MAX_WORKSPACE_SIZE = 900000
-MIN_IMAGE_SIZE = 5000
-MIN_QUALITY_IMAGE_SIZE = 30000
-DIG_FOR_URLS = OFF
-DOWNLOAD_EVERYTHING = ON
-SPIDER_ALL_IMAGES = ON
-SAVE_SUBJECT_KEYWORDS = ON
-MIN_URL_SIZE = 10
-MIN_STEM_SIZE = 3
-MIN_WORD_SIZE = 2
-MAX_WORD_SIZE = 20
-MIN_PATTERN_SIZE = 4
-LONG_KEYWORD_SIZE = 18
-MAX_URL_SIZE = 170
-MAX_FILE_NAME_SIZE = 80
-TIME_LOCK = 5
-STEP_SCAN = 3
-SAVE_CYCLE = 10
-DEBUG_CONSOLE = ON
-DEBUG_LOG = OFF
-CLEAN_START = ON
-FREELY_GRAB_URLS = ON
-RANDOM_START = 200
-URL_LIMIT_AMOUNT = 1000
-HTML_IMAGE_PER_PAGE = 50
-NB_OF_SITE_TO_SPIDER = 100
-PROGRAM_PATH = file:///home/linux/Bureau/Programmation/image-miner-X/dev/image-hunter.html**
+**Note don't forget to change the PROGRAM_PATH**PROGRAM_PATH = file:///home/linux/Bureau/Programmation/image-miner-X/dev/image-hunter.html**
 
 Web server version is being implemented.
  
@@ -136,7 +126,7 @@ More intelligence is on the way...
   - Better roaming 
 
 **NEXT PHASE**
-Image-Miner will have the ability to judge the quality of an image. It all ready does a very impressive job with no visual information. 
+Image-Miner will have the ability to judge the quality of an image. It already does a very impressive job with no visual information. 
 
 When the vision algorithm will be ready the software will do an amazing job.
 
