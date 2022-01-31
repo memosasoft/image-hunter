@@ -1,8 +1,11 @@
 **Image-Hunter**
 The new name for Image-Miner
 
-Image-Hunter is an AI project. It implements ideas about autonomous agents, machine learning, natural language processing and many other artificial intelligence topics that are of interest. Some of the ideas being developed in this project have been in my head for more than 25 years. They come from my work in IT. I had the privilege to work with many gifted engineers and developers and I've been in contact with these ideas for a long time. The project is evolving very quickly.
+Image-Hunter is an AI project. It implements ideas about autonomous agents, machine learning, natural language processing and many other artificial intelligence topics that are of interest. Some of the ideas being developed in this project have been in my head for more than 25 years. They come from my work in IT. I had the privilege to work with many gifted engineers and developers and I've been in contact with these ideas for a long time. 
 
+**HARD-CORE DEVELOPEMENT**
+
+The project is evolving very quickly.
 Image-Hunter is more and more a search engine than a simple scraper. It has new features that enable users to search the net in BAZOOKA mode.
 
 **BAZOOKA MODE**
