@@ -1,4 +1,5 @@
 **Image-Hunter**
+The new name for Image-Miner
 
 Image-Hunter is an AI project. It implements ideas about autonomous agents, machine learning, natural language processing and many other artificial intelligence topics that are of interest. Some of the ideas being developed in this project have been in my head for more than 25 years. They come from my work in IT. I had the privilege to work with many gifted engineers and developers and I've been in contact with these ideas for a long time. The project is evolving very quickly.
 
@@ -14,11 +15,12 @@ If you have suggestions I am very open.  I also welcome any help in the project.
 
 The system is slowly becoming a search engine. It was the goal of the image retrieval project.
 
-INSTALLING THE SOFTWARE
+**INSTALLING THE SOFTWARE**
 Image-hunter is the new name of Image-miner
+
 https://github.com/memosasoft/image-miner
 
-**OPTIMAL CONFIG**
+OPTIMAL CONFIG
 
 The scraper-spider does an excellent job when it downloads everything flag is active
 
@@ -51,7 +53,6 @@ The only thing missing is the VISION module.
     It as a database to keep track of information
     It build a depot of all images
     It keeps a history
-
 
 There is also one config.env file that lets you play with the parameters of the scrapper.
 
