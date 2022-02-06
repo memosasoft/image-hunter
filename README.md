@@ -1,22 +1,33 @@
 **Image-Hunter**
 The new name for Image-Miner
 
-Image-Hunter is an AI project. It implements ideas about autonomous agents, machine learning, natural language processing and many other artificial intelligence topics that are of interest. Some of the ideas being developed in this project have been in my head for more than 25 years. They come from my work in IT. I had the privilege to work with many gifted engineers and developers and I've been in contact with these ideas for a long time. 
+Image-Hunter is an AI project. It implements ideas about autonomous agents, machine learning, self-learning and natural language processing. Some of the ideas being developed in this project have been in my head slowly maturing for more than 30 years. Some of them also come from my work in IT during past decade. During that time I had the privilege to work with many gifted engineers, programmers and developers that shared their knowledge about artificial intelligence, programming and software developement. 
+
+The system is slowly becoming a search engine. It was the goal of the image retrieval project. Sone developement will be closed temporarly and transfered to the serach engine project.
 
 **HARD-CORE DEVELOPEMENT**
 
 The project is evolving very quickly.
-Image-Hunter is more and more a search engine than a simple scraper. It has new features that enable users to search the net in BAZOOKA mode.
+
+Image-Hunter is more and more a search engine than a simple scraper. It has new features that enable users to search the net based on images. The HTML interface presents not only the images but some of the web content given the user the choice to visit the source of the images to look for more images or for a specific article. 
 
 **BAZOOKA MODE**
-You can spider hundreds of websites for a quick summary and for now image retrieval needs and web page content. This is not recommended because in the long term you will be penalized and blocked and even maybe hacked. It is better to go slow and gather the information with patience.
+You can spider hundreds of websites for a quick summary and for now image retrieval needs and web page content. This is not recommended because in the long term you will be penalized and blocked. 
+
+It is better to go slow and gather the information with patience.
 
 **WEB INTERFACE**
-I added many web interface views giving the scrapper the ability to search a subject through a basic written image search. You just enter a query or phrase and the system retrieves the information related to your search query. The HTML views will popup when the image-hunter.py script is started. The interface is in development and will use JavaScript. I want an advanced image viewing interface.
+The script open automaticly a browser showing the images results in different views. I added many different web interfaces views giving the scrapper the ability to search a subject through a basic written image search. The query can be added thrue a simple GUI interface or directly entered in the command prompte where the program is running. You just enter a query or phrase and the system retrieves the images and some of the information related to your search query. 
 
-If you have suggestions I am very open.  I also welcome any help in the project. This is a learning project too. Well my philosophy is that everything is a learning project. I will soon package everything and prepare installation documentation for quick installation of the scraper-spider.
+The HTML views will popup when the image-hunter.py script is started. 
 
-The system is slowly becoming a search engine. It was the goal of the image retrieval project.
+The interface is in development and will use JavaScript. I want an advanced image viewing interface and am doing research about certainb javasripts libraries that have image viewers integrated into them. If you have suggestions I am very open.  
+
+I also welcome any help in the project. 
+
+This is a learning project. Well my philosophy is that everything is a learning project. 
+
+I will soon package everything and prepare installation documentation for quick installation of the scraper-spider.
 
 **INSTALLING THE SOFTWARE**
 Image-hunter is the new name of Image-miner
