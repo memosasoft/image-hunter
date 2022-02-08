@@ -1,0 +1,150 @@
+ @property
+ built-in
+ classes
+ comprehension
+ decorators
+ dict
+ dictionary
+ exception
+ files
+ func
+ function
+ functions
+ handling
+ if...else...elif
+ inheritance
+ lambda
+ list
+ loop
+ methods
+ nested
+ numbers
+ objects
+ operators
+ read
+ scope
+ slicing
+ string
+ tuple
+ variables
+ while
+ write
+-24px
+-icon-24px
+-star-icon
+<article>
+<aside>
+<audio>
+<body>
+<canvas>
+<datalist>
+<details>
+<div>
+<embed>
+<footer>
+<head>
+<header>
+<img>
+<li>
+<nav>
+<ol>
+<output>
+<p>
+<progress>
+<section>
+<span>
+<title>
+<ul>
+<video>
+abstract
+article
+aside
+assert
+audio
+auto
+body
+boolean
+break
+byte
+canvas
+case
+catch
+char
+class
+const
+continue
+datalist
+default
+details
+dict
+div
+do
+double
+else
+embed
+enum
+extends
+extern
+false
+final
+finally
+float
+footer
+for
+goto
+head
+header
+html
+icon-
+if
+img
+implements
+import
+instanceof
+int
+interface
+li
+long
+native
+nav
+new
+null
+ol
+output
+p
+package
+private
+progress
+protected
+public
+register
+return
+section
+short
+signed
+sizeof
+span
+star-
+star-icon-
+star-icon-24px
+static
+strictfp
+struct
+super
+switch
+synchronized
+this
+throw
+throws
+title
+transient
+true
+try
+typedef
+ul
+union
+unsigned
+video
+void
+volatile
+while

@@ -1,68 +1,7 @@
-
- @property
- built-in
- classes
- comprehension
- decorators
- dict
- dictionary
- exception
- files
- func
- function
- functions
- handling
- if...else...elif
- inheritance
- lambda
- list
- loop
- methods
- nested
- numbers
- objects
- operators
- read
- scope
- slicing
- string
- tuple
- variables
- while
- write
 'll
 'tis
 'twas
 've
--24px
--icon-24px
--star-icon
-100%
-4u
-<article>
-<aside>
-<audio>
-<body>
-<canvas>
-<datalist>
-<details>
-<div>
-<embed>
-<footer>
-<head>
-<header>
-<img>
-<li>
-<nav>
-<ol>
-<output>
-<p>
-<progress>
-<section>
-<span>
-<title>
-<ul>
-<video>
 a
 a's
 able
@@ -71,9 +10,6 @@ about
 above
 abroad
 abst
-abstract
-accept
-accepted
 accordance
 according
 accordingly
@@ -98,13 +34,8 @@ ago
 ah
 ahead
 ai
-aie
-aient
-aies
-ain
 ain't
 aint
-ait
 al
 all
 allow
@@ -118,7 +49,6 @@ also
 although
 always
 am
-amazing
 amid
 amidst
 among
@@ -156,50 +86,20 @@ arent
 arise
 around
 arpa
-article
 as
 aside
 ask
 asked
 asking
 asks
-assert
 associated
 at
 au
-audio
-aura
-aurai
-auraient
-aurais
-aurait
-auras
-aurez
-auriez
-aurions
-aurons
-auront
 auth
-auto
-aux
-avaient
 available
-avais
-avait
-avec
-avez
-aviez
-avions
-avons
 aw
 away
 awfully
-ayant
-ayante
-ayantes
-ayants
-ayez
-ayons
 az
 b
 ba
@@ -209,7 +109,6 @@ backing
 backs
 backward
 backwards
-bargain
 bb
 bd
 be
@@ -244,19 +143,14 @@ bi
 big
 bill
 billion
-bing 
 biol
 bj
 bm
 bn
 bo
-body
-boolean
 both
 bottom
 br
-brand
-break
 brief
 briefly
 bs
@@ -266,7 +160,6 @@ buy
 bv
 bw
 by
-byte
 bz
 c
 c'mon
@@ -278,31 +171,22 @@ can
 can't
 cannot
 cant
-canvas
 caption
-cards
 case
 cases
-cash
-catch
 cause
 causes
 cc
 cd
-ce
 certain
 certainly
-ces
 cf
 cg
 ch
 changes
-char
 ci
 ck
 cl
-claims
-class
 clear
 clearly
 click
@@ -317,15 +201,12 @@ comes
 computer
 con
 concerning
-congratulations
 consequently
 consider
 considering
-const
 contain
 containing
 contains
-continue
 copy
 corresponding
 could
@@ -344,23 +225,17 @@ cx
 cy
 cz
 d
-dans
 dare
 daren't
 darent
-datalist
 date
 de
 dear
-default
 definitely
-des
 describe
 described
 despite
 detail
-details
-dict
 did
 didn
 didn't
@@ -369,7 +244,6 @@ differ
 different
 differently
 directly
-div
 dj
 dk
 dm
@@ -383,14 +257,12 @@ don
 don't
 done
 dont
-double
 doubtful
 down
 downed
 downing
 downs
 downwards
-du
 due
 during
 dz
@@ -408,38 +280,21 @@ eight
 eighty
 either
 eleven
-elle
 else
 elsewhere
-embed
 empty
-en
 end
 ended
 ending
 ends
 enough
 entirely
-enum
 er
 es
 especially
-est
 et
 et-al
 etc
-eu
-eue
-eues
-eurent
-eus
-eusse
-eussent
-eusses
-eussiez
-eussions
-eut
-eux
 even
 evenly
 ever
@@ -453,18 +308,12 @@ ex
 exactly
 example
 except
-extends
-extern
-eûmes
-eût
-eûtes
 f
 face
 faces
 fact
 facts
 fairly
-false
 far
 farther
 felt
@@ -477,8 +326,6 @@ fifth
 fifty
 fify
 fill
-final
-finally
 find
 finds
 fire
@@ -487,13 +334,11 @@ five
 fix
 fj
 fk
-float
 fm
 fo
 followed
 following
 follows
-footer
 for
 forever
 former
@@ -509,23 +354,12 @@ from
 front
 full
 fully
-furent
 further
 furthered
 furthering
 furthermore
 furthers
-fus
-fusse
-fussent
-fusses
-fussiez
-fussions
-fut
 fx
-fûmes
-fût
-fûtes
 g
 ga
 gave
@@ -541,7 +375,6 @@ gf
 gg
 gh
 gi
-gimmicks
 give
 given
 gives
@@ -556,9 +389,7 @@ going
 gone
 good
 goods
-google
 got
-goto
 gotten
 gov
 gp
@@ -575,13 +406,10 @@ groups
 gs
 gt
 gu
-guarantee
-guaranteed
 gw
 gy
 h
 had
-hadn
 hadn't
 hadnt
 half
@@ -600,8 +428,6 @@ he
 he'd
 he'll
 he's
-head
-header
 hed
 hell
 hello
@@ -646,7 +472,6 @@ ht
 htm
 html
 http
-https
 hu
 hundred
 i
@@ -655,7 +480,6 @@ i'll
 i'm
 i've
 i.e.
-icon-
 id
 ie
 if
@@ -663,20 +487,15 @@ ignored
 ii
 il
 ill
-ils
 im
-img
 immediate
 immediately
-implements
-import
 importance
 important
 in
 inasmuch
 inc
 inc.
-income
 indeed
 index
 indicate
@@ -686,18 +505,14 @@ information
 inner
 inside
 insofar
-instanceof
 instead
-insurance
 int
 interest
 interested
 interesting
 interests
-interface
 into
 invention
-investment
 inward
 io
 iq
@@ -756,16 +571,13 @@ latter
 latterly
 lb
 lc
-le
 least
 length
-les
 less
 lest
 let
 let's
 lets
-leur
 li
 like
 liked
@@ -788,20 +600,17 @@ ls
 lt
 ltd
 lu
-lui
 lv
 ly
 m
 ma
 made
 mainly
-mais
 make
 makes
 making
 man
 many
-marketing
 may
 maybe
 mayn't
@@ -815,16 +624,13 @@ meantime
 meanwhile
 member
 members
-membership
 men
 merely
-mes
 mg
 mh
 microsoft
 might
 might've
-mightn
 mightn't
 mightnt
 mil
@@ -838,9 +644,6 @@ ml
 mm
 mn
 mo
-moi
-mon
-money
 more
 moreover
 most
@@ -858,7 +661,6 @@ much
 mug
 must
 must've
-mustn
 mustn't
 mustnt
 mv
@@ -868,13 +670,10 @@ my
 myself
 myse”
 mz
-même
 n
 na
 name
 namely
-native
-nav
 nay
 nc
 nd
@@ -886,7 +685,6 @@ necessary
 need
 needed
 needing
-needn
 needn't
 neednt
 needs
@@ -908,7 +706,6 @@ nine
 ninety
 nl
 no
-no-obligation
 no-one
 nobody
 non
@@ -921,12 +718,9 @@ nos
 not
 noted
 nothing
-notre
 notwithstanding
-nous
 novel
 now
-now!
 nowhere
 np
 nr
@@ -941,12 +735,10 @@ obtained
 obviously
 of
 off
-offer
 often
 oh
 ok
 okay
-ol
 old
 older
 oldest
@@ -958,13 +750,11 @@ one
 one's
 ones
 only
-ont
 onto
 open
 opened
 opening
 opens
-opportunity
 opposite
 or
 ord
@@ -976,7 +766,6 @@ org
 other
 others
 otherwise
-ou
 ought
 oughtn't
 oughtnt
@@ -984,7 +773,6 @@ our
 ours
 ourselves
 out
-output
 outside
 over
 overall
@@ -992,17 +780,14 @@ owing
 own
 p
 pa
-package
 page
 pages
-par
 part
 parted
 particular
 particularly
 parting
 parts
-pas
 past
 pe
 per
@@ -1028,10 +813,8 @@ poorly
 possible
 possibly
 potentially
-pour
 pp
 pr
-pre-approved
 predominantly
 present
 presented
@@ -1040,34 +823,26 @@ presents
 presumably
 previously
 primarily
-private
 probably
 problem
 problems
-progress
-promotion
 promptly
-protected
 proud
 provided
 provides
 pt
-public
 put
 puts
 pw
 py
 q
 qa
-qu
 que
-qui
 quickly
 quite
 qv
 r
 ran
-rates
 rather
 rd
 re
@@ -1078,11 +853,9 @@ recent
 recently
 ref
 refs
-refund
 regarding
 regardless
 regards
-register
 related
 relatively
 research
@@ -1091,10 +864,8 @@ respectively
 resulted
 resulting
 results
-return
 right
 ring
-risk
 ro
 room
 rooms
@@ -1105,7 +876,6 @@ rw
 s
 sa
 said
-sales
 same
 saw
 say
@@ -1132,27 +902,14 @@ self
 selves
 sensible
 sent
-sera
-serai
-seraient
-serais
-serait
-seras
-serez
-seriez
-serions
 serious
 seriously
-serons
-seront
-ses
 seven
 seventy
 several
 sg
 sh
 shall
-shan
 shan't
 shant
 she
@@ -1162,7 +919,6 @@ she's
 shed
 shell
 shes
-short
 should
 should've
 shouldn
@@ -1177,7 +933,6 @@ shows
 si
 side
 sides
-signed
 significant
 significantly
 similar
@@ -1187,7 +942,6 @@ sincere
 site
 six
 sixty
-sizeof
 sj
 sk
 sl
@@ -1198,9 +952,6 @@ smaller
 smallest
 sn
 so
-soient
-sois
-soit
 some
 somebody
 someday
@@ -1212,31 +963,19 @@ sometime
 sometimes
 somewhat
 somewhere
-sommes
-son
-sont
 soon
 sorry
-soyez
-soyons
-span
 specifically
 specified
 specify
 specifying
 sr
 st
-star-
-star-icon-
-star-icon-24px
 state
 states
-static
 still
 stop
-strictfp
 strongly
-struct
 su
 sub
 substantially
@@ -1244,30 +983,22 @@ successfully
 such
 sufficiently
 suggest
-suis
 sup
-super
-sur
 sure
 sv
-switch
 sy
-synchronized
 system
 sz
 t
 t's
-ta
 take
 taken
 taking
 tc
 td
-te
 tell
 ten
 tends
-tes
 test
 text
 tf
@@ -1341,15 +1072,12 @@ three
 throug
 through
 throughout
-throw
-throws
 thru
 thus
 til
 till
 tip
 tis
-title
 tj
 tk
 tm
@@ -1357,8 +1085,6 @@ tn
 to
 today
 together
-toi
-ton
 too
 took
 top
@@ -1366,18 +1092,14 @@ toward
 towards
 tp
 tr
-transient
-trial
 tried
 tries
 trillion
-true
 truly
 try
 trying
 ts
 tt
-tu
 turn
 turned
 turning
@@ -1389,34 +1111,26 @@ twelve
 twenty
 twice
 two
-typedef
 tz
 u
 ua
 ug
 uk
-ul
 um
 un
 under
 underneath
 undoing
-une
 unfortunately
-union
 unless
 unlike
 unlikely
-unsigned
-unsolicited
-unsubscribe
 until
 unto
 up
 upon
 ups
 upwards
-urgent
 us
 use
 used
@@ -1440,16 +1154,10 @@ very
 vg
 vi
 via
-video
 viz
 vn
-void
 vol
-volatile
 vols
-vos
-votre
-vous
 vs
 vu
 w
@@ -1535,8 +1243,6 @@ widely
 width
 will
 willing
-win
-winner
 wish
 with
 within
@@ -1560,7 +1266,6 @@ ws
 www
 x
 y
-yahoo
 ye
 year
 years
@@ -1589,193 +1294,3 @@ za
 zero
 zm
 zr
-à
-étaient
-étais
-était
-étant
-étante
-étantes
-étants
-étiez
-étions
-été
-étée
-étées
-étés
-êtes
-microsft 
-youtube
-twitter
-#1
-100% more
-100% free
-100% satisfied
-additional income
-be your own boss
-best price
-big bucks
-cash bonus
-cents on the dollar
-consolidate debt
-double your cash
-double your income
-earn extra cash
-earn money
-eliminate bad credit
-extra cash
-extra income
-expect to earn
-fast cash
-financial freedom
-free access
-free consultation
-free gift
-free hosting
-free info
-free investment
-free membership
-free money
-free preview
-free quote
-free trial
-full refund
-get out of debt
-get paid
-giveaway
-increase sales
-increase traffic
-incredible deal
-lower rates
-lowest price
-make money
-million dollars
-miracle
-money back
-once in a lifetime
-one time
-pennies a day
-potential earnings
-prize
-promise
-pure profit
-risk-free
-satisfaction guaranteed
-save big money
-save up to
-special promotion
-act now
-apply now
-become a member
-call now
-click below
-click here
-get it now
-do it today
-don’t delete
-exclusive deal
-get started now
-important information regarding
-information you requested
-instant
-limited time
-new customers only
-order now
-please read
-see for yourself
-sign up free
-take action
-this won’t last
-what are you waiting for?
-while supplies last
-will not believe your eyes
-winning
-you are a winner
-you have been selected
-bulk email
-buy direct
-cancel at any time
-check or money order
-confidentiality
-cures
-dear friend
-direct email
-direct marketing
-hidden charges
-human growth hormone
-internet marketing
-lose weight
-mass email
-meet singles
-multi-level marketing
-no catch
-no cost
-no credit check
-no fees
-no gimmick
-no hidden costs
-no hidden fees
-no interest
-no investment
-no obligation
-no purchase necessary
-no questions asked
-no strings attached
-not junk
-notspam
-obligation
-passwords
-requires initial investment
-social security number
-this isn’t a scam
-this isn’t junk
-this isn’t spam
-undisclosed
-unsecured credit
-unsecured debt
-valium
-viagra
-vicodin
-we hate spam
-weight loss
-xanax
-accept credit cards
-all new
-as seen on
-beneficiary
-billing
-bonus
-cards accepted
-certified
-cheap
-clearance
-compare rates
-credit card offers
-deal
-debt
-discount
-fantastic
-in accordance with laws
-join millions
-lifetime
-loans
-luxury
-marketing solution
-message contains
-mortgage rates
-name brand
-online marketing
-opt in
-quote
-refinance
-removal
-reserves the right
-score
-search engine
-sent in compliance
-subject to…
-terms and conditions
-unlimited
-warranty
-web traffic
-work from home
