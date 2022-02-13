@@ -1,7 +1,11 @@
 **Image-Hunter**
 The new name for Image-Miner
 
-Image-Hunter is an AI project. It implements ideas about autonomous agents, machine learning, self-learning and natural language processing. Some of the ideas being developed in this project have been in my head slowly maturing for more than 30 years. Some of them also come from my work in IT during the past decade. During that time I had the privilege to work with many gifted engineers, programmers and developers that shared their knowledge about artificial intelligence, programming and software development. 
+Image-Hunter is personal AI project. It is a project where I can be free to develop ideas about artificial intelligence and natural languague processing. In fact the project implements ideas about search engines, autonomous agents, machine learning, self-learning and natural language processing. 
+
+Some of the ideas being developed in this project have been slowly maturing for more than 30 years. Some of them also come from my work in IT during same time. During that time I had the privilege to work with many gifted engineers, programmers and developers that shared their knowledge about artificial intelligence, programming and software development. 
+
+**SCRAPER-SEARCH-ENGINE**
 
 The system is slowly becoming a search engine. It was the goal of the image retrieval project. Sone development will be closed temporarily and transferred to the search engine project.
 
