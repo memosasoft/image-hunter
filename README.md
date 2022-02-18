@@ -5,7 +5,9 @@ Image-Hunter is personal AI project. The project implements ideas about search e
 
 **SCRAPER-SEARCH-ENGINE**
 
-The system is slowly becoming a search engine. It was the goal of the image retrieval project. Soon development will be transferred to the search engine project.
+The system is slowly becoming a search engine. It was the goal of the image retrieval project. 
+
+Soon development will be transferred to the search engine project.
 
 **HARD-CORE DEVELOPEMENT**
 
@@ -18,11 +20,21 @@ The HTML interface presents not only the images but some of the web content givi
 **WEB INTERFACE**
 The script opens automatically a browser showing the images results in different views. 
 
-I added many different web interfaces views giving the scrapper the ability to search a subject through a basic written image search. The query can be added through a simple GUI interface or directly entered in the command prompt where the program is running. You just enter a query or phrase and the system retrieves the images and some of the information related to your search query. 
+Search query can be done with the terminal. 
+
+I am trying to find a way to make a basic website search form and connected it to python script.
+
+I added many different web interfaces (HTML) views giving the scrapper the ability to search a subject through a basic written image search. 
+
+The query can be also added through a simple GUI interface or directly entered in the command prompt where the program is running. 
+
+You just enter a query or phrase and the system retrieves the images and some of the information related to your search query. 
 
 The HTML views will popup when the image-hunter.py script is started. 
 
-The interface is in development and will use JavaScript. I want an advanced image viewing interface and I am currently doing research about certain javascripts libraries that have image viewers integrated into them. 
+The interface is in development and will use JavaScript. 
+
+I want an advanced image viewing interface and I am currently doing research about certain javascripts libraries that have image viewers integrated into them. 
 
 **PACKAGING**
 I will soon package everything and prepare installation documentation for quick installation of the scraper-spider.
