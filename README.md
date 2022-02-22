@@ -22,13 +22,7 @@ The script opens automatically a browser showing the images results in different
 
 Search query can be done with the terminal. 
 
-I am trying to find a way to make a basic website search form and connected it to python script.
-
-I added many different web interfaces (HTML) views giving the scrapper the ability to search a subject through a basic written image search. 
-
-The query can be also added through a simple GUI interface or directly entered in the command prompt where the program is running. 
-
-You just enter a query or phrase and the system retrieves the images and some of the information related to your search query. 
+You simply enter a query or phrase and the system retrieves the images and some of the information related to your search query. 
 
 The HTML views will popup when the image-hunter.py script is started. 
 
